@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Task } from '../types';
+import Metrics from './Metrics';
 import {
   Box,
   Button,
@@ -126,18 +127,7 @@ const TodoList: React.FC<Props> = ({ tasks, onTaskAdd, onTaskDelete }) => {
         </TableBody>
       </Table>
 
-      {/* Average time to finish tasks */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <p>Average time to finish tasks: 22:15 minutes</p>
-        <div>
-          <p>Average time to finish tasks by priority:</p>
-          <ul>
-            <li>Low: 10:25 mins</li>
-            <li>Medium: 10:25 mins</li>
-            <li>High: 10:25 mins</li>
-          </ul>
-        </div>
-      </Box>
+      <Metrics />
     </Box>
   );
 };
