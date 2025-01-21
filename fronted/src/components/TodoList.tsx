@@ -92,12 +92,12 @@ const TodoList: React.FC<Props> = ({ tasks, onTaskAdd, onTaskDelete }) => {
               </Select>
             </FormControl>
           </Box>
-          <Button variant="contained" onClick={handleTaskAdd}>
-            New To Do
-          </Button>
         </Box>
       </Box>
 
+      <Button variant="contained" onClick={handleTaskAdd} style={{ maxWidth: '150px' }} sx={{ textTransform: 'capitalize' }}>
+        + New To Do
+      </Button>
       <Table>
         <TableHead>
           <TableRow>
