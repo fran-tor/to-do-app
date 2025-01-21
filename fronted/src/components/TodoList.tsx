@@ -1,10 +1,10 @@
 import * as React from 'react';
+import { Task } from '../types';
 import {
   Box,
   Button,
   Checkbox,
   FormControl,
-  InputLabel,
   MenuItem,
   Select,
   Table,
@@ -13,14 +13,7 @@ import {
   TableHead,
   TableRow,
   TextField,
-  Typography,
 } from '@mui/material';
-
-interface Task {
-  name: string;
-  priority: string;
-  dueDate?: string;
-}
 
 interface Props {
   tasks: Task[];
@@ -36,17 +29,18 @@ const TodoList: React.FC<Props> = ({ tasks, onTaskAdd, onTaskDelete }) => {
   const handleTaskAdd = () => {
     if (newTaskName.trim() !== '') {
       const newTask: Task = {
-        name: newTaskName,
+        id: tasks.length + 1,
+        text: newTaskName,
+        dueDate: newTaskState === 'Done' ? new Date().toISOString() : undefined,
+        done: newTaskState === 'Done',
+        doneDate: newTaskState === 'Done' ? new Date().toISOString() : undefined,
         priority: newTaskPriority,
+        creationDate: new Date().toISOString(),
       };
       onTaskAdd(newTask);
       setNewTaskName('');
     }
   };
-
-  // const handleTaskStateChange = (taskId: number, state: string) => {
-  //   // onTaskStateChange(taskId, state);
-  // }
 
   const handleTaskDelete = (taskId: number) => {
     onTaskDelete(taskId);
@@ -56,7 +50,7 @@ const TodoList: React.FC<Props> = ({ tasks, onTaskAdd, onTaskDelete }) => {
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, borderColor: 'primary.main', border: 1, p: 2 }}>
         <Box sx={{ display: 'flex', gap: 2 }}>
-          <p>Name</p>
+          <p style={{ minWidth: '60px' }}>Name</p>
           <TextField
             label="Text"
             value={newTaskName}
@@ -66,7 +60,7 @@ const TodoList: React.FC<Props> = ({ tasks, onTaskAdd, onTaskDelete }) => {
         </Box>
         <Box sx={{ display: 'flex', gap: 2, flexDirection: 'column' }}>
           <Box sx={{ display: 'flex', gap: 2 }}>
-            <p>Priority</p>
+            <p style={{ minWidth: '60px' }}>Priority</p>
             <FormControl sx={{ minWidth: 120 }}>
               <Select
                 labelId="priority-select-label"
@@ -82,7 +76,7 @@ const TodoList: React.FC<Props> = ({ tasks, onTaskAdd, onTaskDelete }) => {
             </FormControl>
           </Box>
           <Box sx={{ display: 'flex', gap: 2 }}>
-            <p>State</p>
+            <p style={{ minWidth: '60px' }}>State</p>
             <FormControl sx={{ minWidth: 120 }}>
               <Select
                 labelId="priority-select-label"
@@ -98,7 +92,7 @@ const TodoList: React.FC<Props> = ({ tasks, onTaskAdd, onTaskDelete }) => {
             </FormControl>
           </Box>
           <Button variant="contained" onClick={handleTaskAdd}>
-            Add
+            New To Do
           </Button>
         </Box>
       </Box>
@@ -119,7 +113,7 @@ const TodoList: React.FC<Props> = ({ tasks, onTaskAdd, onTaskDelete }) => {
               <TableCell padding="checkbox">
                 <Checkbox />
               </TableCell>
-              <TableCell>{task.name}</TableCell>
+              <TableCell>{task.text}</TableCell>
               <TableCell>{task.priority}</TableCell>
               <TableCell>{task.dueDate || '-'}</TableCell>
               <TableCell>
