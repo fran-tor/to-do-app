@@ -32,9 +32,11 @@ const TodoApp = () => {
   const handleNewTodoModalClose = async () => {
     setIsNewTodoModalOpen(false);
     setServerError(null);
-    console.log('updating todos');
-    fetchTodos();
   };
+
+  const handleTodoAdded = async () => {
+    await fetchTodos();
+  }
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -48,7 +50,7 @@ const TodoApp = () => {
         <TodosTable todosList={todosList} />
       )}
       <Metrics />
-      <NewTodoModal isOpen={isNewTodoModalOpen} handleClose={handleNewTodoModalClose} />
+      <NewTodoModal isOpen={isNewTodoModalOpen} handleClose={handleNewTodoModalClose} onTodoAdded={handleTodoAdded} />
     </Box>
   );
 };

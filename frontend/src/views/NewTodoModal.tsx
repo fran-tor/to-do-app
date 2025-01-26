@@ -25,16 +25,17 @@ const style = {
 interface Props {
   isOpen: boolean;
   handleClose: () => void;
+  onTodoAdded: () => void;
 }
 
-const NewTodoModal: React.FC<Props> = ({ isOpen, handleClose }) => {
+const NewTodoModal: React.FC<Props> = ({ isOpen, handleClose, onTodoAdded }) => {
   const [newTodoText, setNewTodoText] = React.useState('');
   const [newTodoPriority, setNewTodoPriority] = React.useState('Low');
   const [newTodoDueDate, setNewTodoDueDate] = React.useState('');
 
   const handleCreate = () => {
     if (newTodoText.trim() !== '') {
-      const newTask: Todo = {
+      const newTodo: Todo = {
         // id: tasks.length + 1,
         id: 0,
         text: newTodoText,
@@ -44,11 +45,14 @@ const NewTodoModal: React.FC<Props> = ({ isOpen, handleClose }) => {
         priority: newTodoPriority,
         creationDate: new Date().toISOString(),
       };
-      todos.create(newTask);
-      setNewTodoText('');
-      setNewTodoPriority('Low');
-      setNewTodoDueDate('');
-      handleClose();
+      todos.create(newTodo).finally(() => {
+        // Resets values and closes modal after the request is done
+        setNewTodoText('');
+        setNewTodoPriority('Low');
+        setNewTodoDueDate('');
+        handleClose();
+        onTodoAdded();
+      });
     } else {
       alert('Task name cannot be empty');
     }
