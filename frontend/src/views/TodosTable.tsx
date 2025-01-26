@@ -3,10 +3,10 @@ import { Todo } from "../types";
 import { Button, Checkbox, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 
 interface Props {
-  tasks: Todo[];
+  todosList: Todo[];
 }
 
-const TodosTable: React.FC<Props> = ({ tasks }) => {
+const TodosTable: React.FC<Props> = ({ todosList }) => {
   const handleTaskDelete = (taskId: number) => {
     // onTaskDelete(taskId);
   }
@@ -23,7 +23,7 @@ const TodosTable: React.FC<Props> = ({ tasks }) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {tasks.map((task, index) => (
+        {todosList.map((task, index) => (
           <TableRow key={index}>
             <TableCell padding="checkbox">
               <Checkbox />

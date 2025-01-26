@@ -5,13 +5,21 @@ import {
   Box,
   Button,
 } from '@mui/material';
-import useFetch from '../hooks/useFetch';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import NewTodoModal from './NewTodoModal';
+import { todos } from '../api/todos';
+import { Todo } from '../types';
 
-const TodoList = () => {
-  const { tasks, error } = useFetch('http://localhost:9090/todos');
+const TodoApp = () => {
+  const [todosList, setTodosList] = useState<Todo[]>([]);
+  const [serverError, setServerError] = useState<string | null>(null);
   const [isNewTodoModalOpen, setIsNewTodoModalOpen] = useState(false);
+
+  useEffect(() => {
+    todos.getAll()
+      .then((data) => setTodosList(data))
+      .catch(() => setServerError('Error fetching data'));
+  });
 
   const handleNewTodoModalOpen = () => {
     setIsNewTodoModalOpen(true);
@@ -19,24 +27,11 @@ const TodoList = () => {
 
   const handleNewTodoModalClose = () => {
     setIsNewTodoModalOpen(false);
+    setServerError(null);
+    todos.getAll()
+      .then((data) => setTodosList(data))
+      .catch(() => setServerError('Error fetching data'));
   }
-
-  const handleTaskAdd = () => {
-    // if (newTaskName.trim() !== '') {
-    //   const newTask: Task = {
-    //     id: tasks.length + 1,
-    //     text: newTaskName,
-    //     dueDate: newTaskState === 'Done' ? new Date().toISOString() : undefined,
-    //     done: newTaskState === 'Done',
-    //     doneDate: newTaskState === 'Done' ? new Date().toISOString() : undefined,
-    //     priority: newTaskPriority,
-    //     creationDate: new Date().toISOString(),
-    //   };
-    //   onTaskAdd(newTask);+
-
-    //   setNewTaskName('');
-    // }
-  };
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -44,11 +39,15 @@ const TodoList = () => {
       <Button variant="contained" onClick={handleNewTodoModalOpen} style={{ maxWidth: '150px' }} sx={{ textTransform: 'capitalize' }}>
         + New To Do
       </Button>
-      <TodosTable tasks={tasks} />
+      {serverError ? (
+        <Box sx={{ color: 'red' }}>{serverError}</Box>
+      ) : (
+        <TodosTable todosList={todosList} />
+      )}
       <Metrics />
       <NewTodoModal isOpen={isNewTodoModalOpen} handleClose={handleNewTodoModalClose} />
     </Box>
   );
 };
 
-export default TodoList;
+export default TodoApp;
