@@ -7,15 +7,10 @@ import {
   Box,
   Button,
 } from '@mui/material';
+import useFetch from '../hooks/useFetch';
 
 const TodoList = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-
-  useEffect(() => {
-    fetch('http://localhost:9090/todos')
-      .then((response) => response.json())
-      .then((data) => setTasks(data));
-  }, []);
+  const { tasks, error } = useFetch('http://localhost:9090/todos');
 
   const handleTaskAdd = () => {
     // if (newTaskName.trim() !== '') {
