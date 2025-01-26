@@ -1,8 +1,6 @@
-import { Task } from '../types';
 import Metrics from './Metrics';
 import TodosFilter from './TodosFilter';
 import TodosTable from './TodosTable';
-import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -31,7 +29,6 @@ const TodoList = () => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <TodosFilter />
-
       <Button variant="contained" onClick={handleTaskAdd} style={{ maxWidth: '150px' }} sx={{ textTransform: 'capitalize' }}>
         + New To Do
       </Button>
