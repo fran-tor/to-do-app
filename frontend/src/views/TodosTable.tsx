@@ -1,9 +1,9 @@
 import React from "react";
-import { Task } from "../types";
+import { Todo } from "../types";
 import { Button, Checkbox, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 
 interface Props {
-  tasks: Task[];
+  tasks: Todo[];
 }
 
 const TodosTable: React.FC<Props> = ({ tasks }) => {

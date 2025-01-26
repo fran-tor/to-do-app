@@ -3,6 +3,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { Button, FormControl, MenuItem, Select, TextField } from '@mui/material';
+import { todos } from '../api/todos';
+import { Todo } from '../types';
 
 const style = {
   position: 'absolute',
@@ -32,17 +34,21 @@ const NewTodoModal: React.FC<Props> = ({ isOpen, handleClose }) => {
 
   const handleCreate = () => {
     if (newTodoText.trim() !== '') {
-      // const newTask: Task = {
-      //   id: tasks.length + 1,
-      //   text: newTaskName,
-      //   dueDate: newTaskState === 'Done' ? new Date().toISOString() : undefined,
-      //   done: newTaskState === 'Done',
-      //   doneDate: newTaskState === 'Done' ? new Date().toISOString() : undefined,
-      //   priority: newTaskPriority,
-      //   creationDate: new Date().toISOString(),
-      // };
-      // onTaskAdd(newTask);
+      const newTask: Todo = {
+        // id: tasks.length + 1,
+        id: 0,
+        text: newTodoText,
+        dueDate: newTodoDueDate,
+        done: false,
+        doneDate: undefined,
+        priority: newTodoPriority,
+        creationDate: new Date().toISOString(),
+      };
+      todos.create(newTask);
       setNewTodoText('');
+      setNewTodoPriority('Low');
+      setNewTodoDueDate('');
+      handleClose();
     } else {
       alert('Task name cannot be empty');
     }
@@ -60,9 +66,6 @@ const NewTodoModal: React.FC<Props> = ({ isOpen, handleClose }) => {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Create a new To Do
           </Typography>
-          {/* <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography> */}
           <Box sx={{ display: 'flex', gap: 2 }}>
             <p style={{ minWidth: '60px' }}>Name</p>
             <TextField

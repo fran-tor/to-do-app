@@ -9,7 +9,7 @@ import com.encora.todo.models.ToDoModel;
 
 @Repository
 public class ToDoRepository {
-    private List<ToDoModel> toDoList = new ArrayList<>();
+    private final List<ToDoModel> toDoList = new ArrayList<>();
 
     public List<ToDoModel> getToDoList() {
         return toDoList;

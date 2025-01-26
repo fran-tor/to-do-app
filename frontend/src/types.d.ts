@@ -1,4 +1,4 @@
-export interface Task {
+export interface Todo {
   id: number;
   text: string;
   dueDate?: string;  // Optional

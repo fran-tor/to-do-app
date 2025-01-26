@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Task } from "../types";
+import { Todo } from "../types";
 
 const useFetch = (url: string) => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Todo[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
