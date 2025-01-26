@@ -18,4 +18,20 @@ public class ToDoRepository {
     public void setToDo(ToDoModel toDo) {
         toDoList.add(toDo);
     }
+
+    public void deleteToDoById(Long id) {
+        toDoList.removeIf(toDo -> toDo.getId().equals(id));
+    }
+
+    public void updateToDoById(Long id, ToDoModel toDo) {
+        toDoList.stream()
+                .filter(todo -> todo.getId().equals(id))
+                .forEach(todo -> {
+                    todo.setText(toDo.getText());
+                    todo.setDueDate(toDo.getDueDate());
+                    todo.setDone(toDo.isDone());
+                    todo.setDoneDate(toDo.getDoneDate());
+                    todo.setPriority(toDo.getPriority());
+                });
+    }
 }

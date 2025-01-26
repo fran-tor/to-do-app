@@ -1,14 +1,16 @@
 import React from "react";
 import { Todo } from "../types";
 import { Button, Checkbox, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
+import { todos } from "../api/todos";
 
 interface Props {
   todosList: Todo[];
 }
 
 const TodosTable: React.FC<Props> = ({ todosList }) => {
-  const handleTaskDelete = (taskId: number) => {
-    // onTaskDelete(taskId);
+  const handleTodoDelete = async (todoId: number) => {
+    // alert('Delete todo with id: ' + todoId);
+    await todos.delete(todoId);
   }
 
   return (
@@ -23,16 +25,16 @@ const TodosTable: React.FC<Props> = ({ todosList }) => {
         </TableRow>
       </TableHead>
       <TableBody>
-        {todosList.map((task, index) => (
+        {todosList.map((todo, index) => (
           <TableRow key={index}>
             <TableCell padding="checkbox">
               <Checkbox />
             </TableCell>
-            <TableCell>{task.text}</TableCell>
-            <TableCell>{task.priority}</TableCell>
-            <TableCell>{task.dueDate || '-'}</TableCell>
+            <TableCell>{todo.text}</TableCell>
+            <TableCell>{todo.priority}</TableCell>
+            <TableCell>{todo.dueDate || '-'}</TableCell>
             <TableCell>
-              <Button variant="text" onClick={() => handleTaskDelete(index)}>
+              <Button variant="text" onClick={() => handleTodoDelete(todo.id)}>
                 Delete
               </Button>
             </TableCell>
