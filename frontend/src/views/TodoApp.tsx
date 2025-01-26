@@ -34,7 +34,7 @@ const TodoApp = () => {
     setServerError(null);
   };
 
-  const handleTodoAdded = async () => {
+  const handleTodosListChange = async () => {
     await fetchTodos();
   }
 
@@ -47,10 +47,10 @@ const TodoApp = () => {
       {serverError ? (
         <Box sx={{ color: 'red' }}>{serverError}</Box>
       ) : (
-        <TodosTable todosList={todosList} />
+        <TodosTable todosList={todosList} onTodosListChange={handleTodosListChange} />
       )}
       <Metrics />
-      <NewTodoModal isOpen={isNewTodoModalOpen} handleClose={handleNewTodoModalClose} onTodoAdded={handleTodoAdded} />
+      <NewTodoModal isOpen={isNewTodoModalOpen} handleClose={handleNewTodoModalClose} onTodoAdded={handleTodosListChange} />
     </Box>
   );
 };

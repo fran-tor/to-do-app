@@ -5,12 +5,14 @@ import { todos } from "../api/todos";
 
 interface Props {
   todosList: Todo[];
+  onTodosListChange: () => void;
 }
 
-const TodosTable: React.FC<Props> = ({ todosList }) => {
+const TodosTable: React.FC<Props> = ({ todosList, onTodosListChange }) => {
   const handleTodoDelete = async (todoId: number) => {
-    // alert('Delete todo with id: ' + todoId);
-    await todos.delete(todoId);
+    await todos.delete(todoId).finally(async () => {
+      onTodosListChange();
+    });
   }
 
   return (
