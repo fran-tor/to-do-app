@@ -15,23 +15,26 @@ const TodoApp = () => {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isNewTodoModalOpen, setIsNewTodoModalOpen] = useState(false);
 
-  useEffect(() => {
-    todos.getAll()
+  const fetchTodos = async () => {
+    await todos.getAll()
       .then((data) => setTodosList(data))
       .catch(() => setServerError('Error fetching data'));
-  });
+  };
+
+  useEffect(() => {
+    fetchTodos();
+  }, []);
 
   const handleNewTodoModalOpen = () => {
     setIsNewTodoModalOpen(true);
-  }
+  };
 
-  const handleNewTodoModalClose = () => {
+  const handleNewTodoModalClose = async () => {
     setIsNewTodoModalOpen(false);
     setServerError(null);
-    todos.getAll()
-      .then((data) => setTodosList(data))
-      .catch(() => setServerError('Error fetching data'));
-  }
+    console.log('updating todos');
+    fetchTodos();
+  };
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
