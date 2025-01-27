@@ -39,7 +39,8 @@ const TodosTable: React.FC<Props> = ({ todosList, onTodosListChange, onTodoEdit 
             </TableCell>
             <TableCell>{todo.text}</TableCell>
             <TableCell>{todo.priority}</TableCell>
-            <TableCell>{todo.dueDate || '-'}</TableCell>
+            {/* <TableCell>{todo.dueDate ? todos.getFormattedDate(todo.dueDate) : '-'}</TableCell> */}
+            <TableCell>{todo.dueDate ? todo.dueDate : '-'}</TableCell>
             <TableCell>
               <Button variant="text" onClick={() => handleTodoEdit(todo)}>
                 Edit

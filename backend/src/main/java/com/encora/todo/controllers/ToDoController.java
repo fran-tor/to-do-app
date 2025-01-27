@@ -30,8 +30,9 @@ public class ToDoController {
     }
 
     @PostMapping
-    public void addTodo(@RequestBody ToDoModel toDo) {
+    public ToDoModel addTodo(@RequestBody ToDoModel toDo) {
         toDoService.addTodo(toDo);
+        return toDoService.getTodos().get(toDoService.getTodos().size() - 1);
     }
 
     @DeleteMapping("/{id}")

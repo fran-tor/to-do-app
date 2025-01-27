@@ -37,13 +37,13 @@ const BaseModal: React.FC<Props> = ({ isOpen, handleClose, onTodoActionDone, act
   const actionButtonText = actionType === ActionType.CREATE ? 'Create' : 'Edit';
   const [todoText, settodoText] = React.useState('');
   const [todoPriority, settodoPriority] = React.useState('Low');
-  const [todoDueDate, settodoDueDate] = React.useState('');
+  const [todoDueDate, setTodoDueDate] = React.useState('');
 
   useEffect(() => {
     if (todo && actionType === ActionType.EDIT) {
       settodoText(todo.text);
       settodoPriority(todo.priority);
-      settodoDueDate(todo.dueDate || '');
+      setTodoDueDate(todo.dueDate || '');
     }
   }, [todo, actionType]);
 
@@ -58,11 +58,12 @@ const BaseModal: React.FC<Props> = ({ isOpen, handleClose, onTodoActionDone, act
         priority: todoPriority,
         creationDate: new Date().toISOString(),
       };
+      console.log('due date', todoDueDate);
       todos.create(newTodo).finally(() => {
         // Resets values and closes modal after the request is done
         settodoText('');
         settodoPriority('Low');
-        settodoDueDate('');
+        setTodoDueDate('');
         handleClose();
         onTodoActionDone();
       });
@@ -85,7 +86,7 @@ const BaseModal: React.FC<Props> = ({ isOpen, handleClose, onTodoActionDone, act
         // Resets values and closes modal after the request is done
         settodoText('');
         settodoPriority('Low');
-        settodoDueDate('');
+        setTodoDueDate('');
         handleClose();
         onTodoActionDone();
       });
@@ -144,7 +145,7 @@ const BaseModal: React.FC<Props> = ({ isOpen, handleClose, onTodoActionDone, act
             <TextField
               type="date"
               value={todoDueDate}
-              onChange={(e) => settodoDueDate(e.target.value)}
+              onChange={(e) => setTodoDueDate('27-10-2021')}
             />
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 2 }}>

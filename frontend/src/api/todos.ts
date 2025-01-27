@@ -33,4 +33,7 @@ export const todos = {
     });
     return await response.json();
   },
+  getFormattedDate(date: string) {
+    return new Date(date).toLocaleDateString();
+  }
 }
