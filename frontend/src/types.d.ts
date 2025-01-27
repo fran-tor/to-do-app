@@ -7,3 +7,17 @@ export interface Todo {
   priority: string;
   creationDate: string;
 }
+
+export interface Metrics {
+  
+}
+
+export interface TodosFilterAttributes {
+  page: number;
+  size: number;
+  sortBy: string;
+  sortOrder: string;
+  done: boolean | null;
+  name: string;
+  priority: string;
+}

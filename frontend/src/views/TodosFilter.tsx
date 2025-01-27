@@ -1,10 +1,20 @@
 import { Box, FormControl, MenuItem, Select, TextField } from '@mui/material';
 import * as React from 'react';
 
+interface Props {
+  onTodosListChange: () => void;
+}
+
 const TodosFilter: React.FC = () => {
-  const [newTaskName, setNewTaskName] = React.useState('');
-  const [newTaskPriority, setNewTaskPriority] = React.useState('Low');
-  const [newTaskState, setNewTaskState] = React.useState('Done'); // Done, Undone
+  const [newTodoText, setNewTodoText] = React.useState('');
+  const [newTodoPriority, setNewTodoPriority] = React.useState('All');
+  const [newTodoState, setNewTodoState] = React.useState('All');
+
+  // handleSearch = async () => {
+  //   await todos.getAll(newTodoText, newTodoPriority, newTodoState)
+  //     .then((data) => setTodosList(data))
+  //     .catch(() => setServerError('Error fetching data'));
+  // }
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, borderColor: 'primary.main', border: 1, p: 2 }}>
@@ -12,8 +22,8 @@ const TodosFilter: React.FC = () => {
         <p style={{ minWidth: '60px' }}>Name</p>
         <TextField
           label="Text"
-          value={newTaskName}
-          onChange={(e) => setNewTaskName(e.target.value)}
+          value={newTodoText}
+          onChange={(e) => setNewTodoText(e.target.value)}
           fullWidth
         />
       </Box>
@@ -24,10 +34,11 @@ const TodosFilter: React.FC = () => {
             <Select
               labelId="priority-select-label"
               id="priority-select"
-              value={newTaskPriority}
-              onChange={(e) => setNewTaskPriority(e.target.value as string)}
+              value={newTodoPriority}
+              onChange={(e) => setNewTodoPriority(e.target.value as string)}
               label=""
             >
+              <MenuItem value="All">All</MenuItem>
               <MenuItem value="Low">Low</MenuItem>
               <MenuItem value="Medium">Medium</MenuItem>
               <MenuItem value="High">High</MenuItem>
@@ -40,8 +51,8 @@ const TodosFilter: React.FC = () => {
             <Select
               labelId="priority-select-label"
               id="priority-select"
-              value={newTaskState}
-              onChange={(e) => setNewTaskState(e.target.value as string)}
+              value={newTodoState}
+              onChange={(e) => setNewTodoState(e.target.value as string)}
               label=""
             >
               <MenuItem value="All">All</MenuItem>

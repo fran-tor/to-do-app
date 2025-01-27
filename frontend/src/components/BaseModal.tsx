@@ -58,14 +58,20 @@ const BaseModal: React.FC<Props> = ({ isOpen, handleClose, onTodoActionDone, act
         priority: todoPriority,
         creationDate: new Date().toISOString(),
       };
-      todos.create(newTodo).finally(() => {
-        // Resets values and closes modal after the request is done
-        settodoText('');
-        settodoPriority('Low');
-        setTodoDueDate('');
-        handleClose();
-        onTodoActionDone();
-      });
+
+      todos.create(newTodo)
+        .then(onTodoActionDone)
+        .catch((error) => {
+          console.error('Failed to create todo with error:', error);
+        })
+        .finally(() => {
+          // Resets values and closes modal after the request is done
+          settodoText('');
+          settodoPriority('Low');
+          setTodoDueDate('');
+          handleClose();
+          // onTodoActionDone();
+        });
     } else {
       alert('Task name cannot be empty');
     }

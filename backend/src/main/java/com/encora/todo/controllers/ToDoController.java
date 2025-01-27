@@ -1,6 +1,6 @@
 package com.encora.todo.controllers;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.encora.todo.models.ToDoModel;
@@ -25,14 +26,23 @@ public class ToDoController {
     ToDoService toDoService;
 
     @GetMapping
-    public ArrayList<ToDoModel> getTodos() {
-        return toDoService.getTodos();
+    public List<ToDoModel> getTodos(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(required = false) String sortBy,
+        @RequestParam(required = false) String sortOrder,
+        @RequestParam(required = false) String done,
+        @RequestParam(required = false) String name,
+        @RequestParam(required = false) String priority
+    ) {
+        return toDoService.getTodos(page, size, sortBy, sortOrder, done, name, priority);
     }
 
     @PostMapping
     public ToDoModel addTodo(@RequestBody ToDoModel toDo) {
         toDoService.addTodo(toDo);
-        return toDoService.getTodos().get(toDoService.getTodos().size() - 1);
+        List<ToDoModel> todos = toDoService.getTodos(0, 0, null, null, null, null, null);
+        return todos.get(todos.size() - 1);
     }
 
     @DeleteMapping("/{id}")

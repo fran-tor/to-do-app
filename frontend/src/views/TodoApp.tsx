@@ -10,6 +10,7 @@ import NewTodoModal from './NewTodoModal';
 import { todos } from '../api/todos';
 import { Todo } from '../types';
 import EditTodoModal from './EditTodoModal';
+// import { TodoListContext, TodoListContextProvider } from '../context/context';
 
 const TodoApp = () => {
   const [todoToEdit, setTodoToEdit] = useState<Todo | undefined>(undefined);
@@ -17,6 +18,15 @@ const TodoApp = () => {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isNewTodoModalOpen, setIsNewTodoModalOpen] = useState(false);
   const [isEditTodoModalOpen, setIsEditTodoModalOpen] = useState(false);
+  const [todosFilterAttributes, setTodosFilterAttributes] = useState({
+    page: 0,
+    size: 10,
+    sortBy: '',
+    sortOrder: '',
+    done: null,
+    text: '',
+    priority: '',
+  });
 
   const fetchTodos = async () => {
     await todos.getAll()
@@ -26,7 +36,7 @@ const TodoApp = () => {
 
   useEffect(() => {
     fetchTodos();
-  }, []);
+  }, [todosFilterAttributes]);
 
   const handleNewTodoModalOpen = () => {
     setIsNewTodoModalOpen(true);
@@ -51,20 +61,22 @@ const TodoApp = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <TodosFilter />
-      <Button variant="contained" onClick={handleNewTodoModalOpen} style={{ maxWidth: '150px' }} sx={{ textTransform: 'capitalize' }}>
-        + New To Do
-      </Button>
-      {serverError ? (
-        <Box sx={{ color: 'red' }}>{serverError}</Box>
-      ) : (
-        <TodosTable todosList={todosList} onTodosListChange={handleTodosListChange} onTodoEdit={handleEditTodoModalOpen} />
-      )}
-      <Metrics />
-      <NewTodoModal isOpen={isNewTodoModalOpen} handleClose={handleNewTodoModalClose} onTodoAdded={handleTodosListChange} />
-      <EditTodoModal isOpen={isEditTodoModalOpen} handleClose={handleEditTodoModalClose} onTodoEdited={handleTodosListChange} todo={todoToEdit} />
-    </Box>
+    // <TodoListContextProvider>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <TodosFilter />
+        <Button variant="contained" onClick={handleNewTodoModalOpen} style={{ maxWidth: '150px' }} sx={{ textTransform: 'capitalize' }}>
+          + New To Do
+        </Button>
+        {serverError ? (
+          <Box sx={{ color: 'red' }}>{serverError}</Box>
+        ) : (
+          <TodosTable todosList={todosList} onTodosListChange={handleTodosListChange} onTodoEdit={handleEditTodoModalOpen} />
+        )}
+        <Metrics />
+        <NewTodoModal isOpen={isNewTodoModalOpen} handleClose={handleNewTodoModalClose} onTodoAdded={handleTodosListChange} />
+        <EditTodoModal isOpen={isEditTodoModalOpen} handleClose={handleEditTodoModalClose} onTodoEdited={handleTodosListChange} todo={todoToEdit} />
+      </Box>
+    // </TodoListContextProvider>
   );
 };
 

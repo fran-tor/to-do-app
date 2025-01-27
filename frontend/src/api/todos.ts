@@ -7,9 +7,20 @@ const headers = {
 };
 
 export const todos = {
-  async getAll() {
-    const response = await fetch(`${BASE_URL}${endpoint}`);
-    return await response.json();
+  async getAll(page = 0, size = 10, sortBy = '', sortOrder = '', done: boolean | null = null, name = '', priority = '') {
+    const params = new URLSearchParams({
+      page: page.toString(),
+      size: size.toString(),
+      sortBy,
+      sortOrder,
+      done: done?.toString() || '',
+      name,
+      priority,
+    });
+
+    const response = await fetch(`${BASE_URL}${endpoint}?${params.toString()}`);
+    const data = await response.json();
+    return data;
   },
   async create(todo: Todo) {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
