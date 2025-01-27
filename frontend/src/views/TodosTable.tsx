@@ -6,13 +6,18 @@ import { todos } from "../api/todos";
 interface Props {
   todosList: Todo[];
   onTodosListChange: () => void;
+  onTodoEdit: (todo: Todo) => void;
 }
 
-const TodosTable: React.FC<Props> = ({ todosList, onTodosListChange }) => {
+const TodosTable: React.FC<Props> = ({ todosList, onTodosListChange, onTodoEdit }) => {
   const handleTodoDelete = async (todoId: number) => {
     await todos.delete(todoId).finally(async () => {
       onTodosListChange();
     });
+  }
+
+  const handleTodoEdit = (todo: Todo) => {
+    onTodoEdit(todo);
   }
 
   return (
@@ -36,6 +41,9 @@ const TodosTable: React.FC<Props> = ({ todosList, onTodosListChange }) => {
             <TableCell>{todo.priority}</TableCell>
             <TableCell>{todo.dueDate || '-'}</TableCell>
             <TableCell>
+              <Button variant="text" onClick={() => handleTodoEdit(todo)}>
+                Edit
+              </Button>
               <Button variant="text" onClick={() => handleTodoDelete(todo.id)}>
                 Delete
               </Button>

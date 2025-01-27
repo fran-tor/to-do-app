@@ -9,11 +9,14 @@ import { useEffect, useState } from 'react';
 import NewTodoModal from './NewTodoModal';
 import { todos } from '../api/todos';
 import { Todo } from '../types';
+import EditTodoModal from './EditTodoModal';
 
 const TodoApp = () => {
+  const [todoToEdit, setTodoToEdit] = useState<Todo | undefined>(undefined);
   const [todosList, setTodosList] = useState<Todo[]>([]);
   const [serverError, setServerError] = useState<string | null>(null);
   const [isNewTodoModalOpen, setIsNewTodoModalOpen] = useState(false);
+  const [isEditTodoModalOpen, setIsEditTodoModalOpen] = useState(false);
 
   const fetchTodos = async () => {
     await todos.getAll()
@@ -34,6 +37,15 @@ const TodoApp = () => {
     setServerError(null);
   };
 
+  const handleEditTodoModalOpen = (todo: Todo) => {
+    setIsEditTodoModalOpen(true);
+    setTodoToEdit(todo);
+  }
+
+  const handleEditTodoModalClose = () => {
+    setIsEditTodoModalOpen(false);
+  }
+
   const handleTodosListChange = async () => {
     await fetchTodos();
   }
@@ -47,10 +59,11 @@ const TodoApp = () => {
       {serverError ? (
         <Box sx={{ color: 'red' }}>{serverError}</Box>
       ) : (
-        <TodosTable todosList={todosList} onTodosListChange={handleTodosListChange} />
+        <TodosTable todosList={todosList} onTodosListChange={handleTodosListChange} onTodoEdit={handleEditTodoModalOpen} />
       )}
       <Metrics />
       <NewTodoModal isOpen={isNewTodoModalOpen} handleClose={handleNewTodoModalClose} onTodoAdded={handleTodosListChange} />
+      <EditTodoModal isOpen={isEditTodoModalOpen} handleClose={handleEditTodoModalClose} onTodoEdited={handleTodosListChange} todo={todoToEdit} />
     </Box>
   );
 };

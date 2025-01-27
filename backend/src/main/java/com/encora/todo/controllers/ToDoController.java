@@ -39,8 +39,8 @@ public class ToDoController {
         toDoService.deleteTodoById(id);
     }
 
-    @PutMapping()
-    public void updateTodoById(@RequestBody Long id, @RequestBody ToDoModel toDo) {
+    @PutMapping("/{id}")
+    public void updateTodoById(@PathVariable Long id, @RequestBody ToDoModel toDo) {
         toDoService.updateTodoById(id, toDo);
     }
 }
