@@ -20,6 +20,13 @@ const TodosTable: React.FC<Props> = ({ todosList, onTodosListChange, onTodoEdit 
     onTodoEdit(todo);
   }
 
+  const handleTodoStateChange = async (todo: Todo, checked: boolean) => {
+    todo.done = checked;
+    await todos.update(todo).finally(async () => {
+      onTodosListChange();
+    });
+  }
+
   return (
     <Table>
       <TableHead>
@@ -35,12 +42,14 @@ const TodosTable: React.FC<Props> = ({ todosList, onTodosListChange, onTodoEdit 
         {todosList.map((todo, index) => (
           <TableRow key={index}>
             <TableCell padding="checkbox">
-              <Checkbox />
+              <Checkbox
+                checked={todo.done}
+                onChange={(event) => { handleTodoStateChange(todo, event.target.checked) }}
+              />
             </TableCell>
             <TableCell>{todo.text}</TableCell>
             <TableCell>{todo.priority}</TableCell>
-            {/* <TableCell>{todo.dueDate ? todos.getFormattedDate(todo.dueDate) : '-'}</TableCell> */}
-            <TableCell>{todo.dueDate ? todo.dueDate : '-'}</TableCell>
+            <TableCell>{todo.dueDate ? todos.getFormattedDate(todo.dueDate) : '-'}</TableCell>
             <TableCell>
               <Button variant="text" onClick={() => handleTodoEdit(todo)}>
                 Edit

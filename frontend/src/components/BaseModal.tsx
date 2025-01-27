@@ -58,7 +58,6 @@ const BaseModal: React.FC<Props> = ({ isOpen, handleClose, onTodoActionDone, act
         priority: todoPriority,
         creationDate: new Date().toISOString(),
       };
-      console.log('due date', todoDueDate);
       todos.create(newTodo).finally(() => {
         // Resets values and closes modal after the request is done
         settodoText('');
@@ -145,7 +144,7 @@ const BaseModal: React.FC<Props> = ({ isOpen, handleClose, onTodoActionDone, act
             <TextField
               type="date"
               value={todoDueDate}
-              onChange={(e) => setTodoDueDate('27-10-2021')}
+              onChange={(e) => setTodoDueDate(e.target.value)}
             />
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 2 }}>
