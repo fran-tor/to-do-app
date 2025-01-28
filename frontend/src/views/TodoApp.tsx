@@ -11,6 +11,7 @@ import { todos } from '../api/todos';
 import { Todo } from '../types';
 import EditTodoModal from './EditTodoModal';
 import { useTodosFilter } from '../context/context';
+import TodosPagination from './Pagination';
 
 const TodoApp = () => {
   const [todoToEdit, setTodoToEdit] = useState<Todo | undefined>(undefined);
@@ -63,6 +64,7 @@ const TodoApp = () => {
       ) : (
         <TodosTable todosList={todosList} onTodosListChange={handleTodosListChange} onTodoEdit={handleEditTodoModalOpen} />
       )}
+      <TodosPagination />
       <Metrics />
       <NewTodoModal isOpen={isNewTodoModalOpen} handleClose={handleNewTodoModalClose} onTodoAdded={handleTodosListChange} />
       <EditTodoModal isOpen={isEditTodoModalOpen} handleClose={handleEditTodoModalClose} onTodoEdited={handleTodosListChange} todo={todoToEdit} />
