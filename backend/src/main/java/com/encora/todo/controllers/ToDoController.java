@@ -32,10 +32,10 @@ public class ToDoController {
         @RequestParam(required = false) String sortBy,
         @RequestParam(required = false) String sortOrder,
         @RequestParam(required = false) String done,
-        @RequestParam(required = false) String name,
+        @RequestParam(required = false) String text,
         @RequestParam(required = false) String priority
     ) {
-        return toDoService.getTodos(page, size, sortBy, sortOrder, done, name, priority);
+        return toDoService.getTodos(page, size, sortBy, sortOrder, done, text, priority);
     }
 
     @PostMapping
