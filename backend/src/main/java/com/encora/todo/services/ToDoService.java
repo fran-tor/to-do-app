@@ -21,7 +21,7 @@ public class ToDoService {
         List<ToDoModel> todos = toDoRepository.getToDoList();
 
         // Filter by done/undone
-        if (done != null && !done.isEmpty()) {
+        if (done != null && !done.isEmpty() && done.matches("^(true|false)$")) {
             boolean isDone = Boolean.parseBoolean(done);
             todos = todos.stream().filter(todo -> todo.isDone() == isDone).collect(Collectors.toList());
         }

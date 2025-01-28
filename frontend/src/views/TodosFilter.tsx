@@ -24,7 +24,7 @@ const TodosFilter: React.FC = () => {
     setTodosFilterAttributes(prev => ({ ...prev, priority: e.target.value }));
   };
 
-  const handleStateChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+  const handleStateChange = (e: SelectChangeEvent<string>) => {
     setNewTodoState(e.target.value as string);
     setTodosFilterAttributes(prev => ({ ...prev, done: e.target.value === 'Done' ? true : e.target.value === 'Undone' ? false : null }));
   };

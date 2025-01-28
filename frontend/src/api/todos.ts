@@ -21,8 +21,8 @@ export const todos = {
 
     const params = new URLSearchParams();
     for (const [key, value] of Object.entries(todosFilterAttributes)) {
-      if (value) {
-        params.append(key, value);
+      if (value !== undefined && value !== null) {
+        params.append(key, value.toString());
       }
     }
 
