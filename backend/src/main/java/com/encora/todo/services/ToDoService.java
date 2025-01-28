@@ -17,7 +17,7 @@ public class ToDoService {
 
     private final AtomicLong counter = new AtomicLong();
 
-    public List<ToDoModel> getTodos(int page, int size, String sortBy, String sortOrder, String done, String name, String priority) {
+    public List<ToDoModel> getTodos(int page, int size, String sortBy, String sortOrder, String done, String text, String priority) {
         List<ToDoModel> todos = toDoRepository.getToDoList();
 
         // Filter by done/undone
@@ -27,12 +27,12 @@ public class ToDoService {
         }
 
         // Filter by name
-        if (name != null && !name.isEmpty()) {
-            todos = todos.stream().filter(todo -> todo.getText().toLowerCase().contains(name.toLowerCase())).collect(Collectors.toList());
+        if (text != null && !text.isEmpty()) {
+            todos = todos.stream().filter(todo -> todo.getText().toLowerCase().contains(text.toLowerCase())).collect(Collectors.toList());
         }
 
         // Filter by priority
-        if (priority != null && !priority.isEmpty()) {
+        if (priority != null && !priority.isEmpty() && priority.matches("^(Low|Medium|High)$")) {
             todos = todos.stream().filter(todo -> todo.getPriority().equalsIgnoreCase(priority)).collect(Collectors.toList());
         }
 

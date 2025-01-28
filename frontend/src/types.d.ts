@@ -9,7 +9,7 @@ export interface Todo {
 }
 
 export interface Metrics {
-  
+
 }
 
 export interface TodosFilterAttributes {
@@ -18,6 +18,6 @@ export interface TodosFilterAttributes {
   sortBy: string;
   sortOrder: string;
   done: boolean | null;
-  name: string;
+  text: string;
   priority: string;
 }

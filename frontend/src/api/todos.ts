@@ -1,4 +1,4 @@
-import { Todo } from "../types";
+import { Todo, TodosFilterAttributes } from "../types";
 
 export const BASE_URL = 'http://localhost:9090/';
 const endpoint = "todos";
@@ -7,16 +7,24 @@ const headers = {
 };
 
 export const todos = {
-  async getAll(page = 0, size = 10, sortBy = '', sortOrder = '', done: boolean | null = null, name = '', priority = '') {
-    const params = new URLSearchParams({
-      page: page.toString(),
-      size: size.toString(),
-      sortBy,
-      sortOrder,
-      done: done?.toString() || '',
-      name,
-      priority,
-    });
+  // async getAll(page = 0, size = 10, sortBy = '', sortOrder = '', done: boolean | null = null, name = '', priority = '') {
+  async getAll(todosFilterAttributes: TodosFilterAttributes) {
+    // const params = new URLSearchParams({
+    //   page: page.toString(),
+    //   size: size.toString(),
+    //   sortBy,
+    //   sortOrder,
+    //   done: done?.toString() || '',
+    //   name,
+    //   priority,
+    // });
+
+    const params = new URLSearchParams();
+    for (const [key, value] of Object.entries(todosFilterAttributes)) {
+      if (value) {
+        params.append(key, value);
+      }
+    }
 
     const response = await fetch(`${BASE_URL}${endpoint}?${params.toString()}`);
     const data = await response.json();

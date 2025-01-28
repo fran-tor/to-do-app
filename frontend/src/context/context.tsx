@@ -1,41 +1,52 @@
-import { createContext, ReactNode, useContext, useState } from "react";
-import { TodosFilterAttributes } from "../types";
+import React, { createContext, useContext, useState } from 'react';
+import { TodosFilterAttributes } from '../types';
 
-interface TodoListContextProps {
+interface TodosFilterContextType {
   todosFilterAttributes: TodosFilterAttributes;
-  setTodosFilterAttributes: (todosFilterAttributes: TodosFilterAttributes) => void;
+  setTodosFilterAttributes: React.Dispatch<React.SetStateAction<TodosFilterAttributes>>;
 }
 
-const defaultFilterAttributes: TodosFilterAttributes = {
-  page: 0,
-  size: 10,
-  sortBy: '',
-  sortOrder: '',
-  done: null,
-  name: '',
-  priority: 'All'
-};
-
-export const TodoListContext = createContext<TodoListContextProps | undefined>(undefined);
-
-export function useTodoListContext() {
-  const context = useContext(TodoListContext);
-  if (context === undefined) {
-    throw new Error('useTodoListContext must be used within a TodoListContextProvider');
-  }
-  return context;
-}
+const TodosFilterContext = createContext<TodosFilterContextType>({
+  todosFilterAttributes: {
+    page: 0,
+    size: 10,
+    sortBy: '',
+    sortOrder: '',
+    done: null,
+    text: '',
+    priority: '',
+  },
+  setTodosFilterAttributes: () => {},
+});
 
 interface TodoListContextProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
 export const TodoListContextProvider: React.FC<TodoListContextProviderProps> = ({ children }) => {
-  const [todosFilterAttributes, setTodosFilterAttributes] = useState<TodosFilterAttributes>(defaultFilterAttributes);
+  const [todosFilterAttributes, setTodosFilterAttributes] = useState<TodosFilterAttributes>({
+    page: 0,
+    size: 10,
+    sortBy: '',
+    sortOrder: '',
+    done: null,
+    text: '',
+    priority: '',
+  });
 
   return (
-    <TodoListContext.Provider value={{ todosFilterAttributes, setTodosFilterAttributes }}>
+    <TodosFilterContext.Provider value={{ todosFilterAttributes, setTodosFilterAttributes }}>
       {children}
-    </TodoListContext.Provider>
+    </TodosFilterContext.Provider>
   );
+};
+
+export const useTodosFilter = () => {
+  const context = useContext(TodosFilterContext);
+
+  if (!context) {
+    throw new Error('useTodosFilter must be used within a TodoListContextProvider');
+  }
+
+  return context;
 };

@@ -42,7 +42,7 @@ public class ToDoController {
     public ToDoModel addTodo(@RequestBody ToDoModel toDo) {
         toDoService.addTodo(toDo);
         List<ToDoModel> todos = toDoService.getTodos(0, 0, null, null, null, null, null);
-        return todos.get(todos.size() - 1);
+        return todos.get(todos.size());
     }
 
     @DeleteMapping("/{id}")
