@@ -10,6 +10,8 @@ interface Props {
 }
 
 const TodosTable: React.FC<Props> = ({ todosList, onTodosListChange, onTodoEdit }) => {
+  const [allTodosSelected, setAllTodosSelected] = React.useState(false);
+
   const handleTodoDelete = async (todoId: number) => {
     await todos.delete(todoId).finally(async () => {
       onTodosListChange();
@@ -32,11 +34,23 @@ const TodosTable: React.FC<Props> = ({ todosList, onTodosListChange, onTodoEdit 
     });
   }
 
+  const handleAllTodosStateChange = async (checked: boolean) => {
+    setAllTodosSelected(checked);
+    for (const todo of todosList) {
+      handleTodoStateChange(todo, checked);
+    }
+  }
+
   return (
     <Table>
       <TableHead>
         <TableRow>
-          <TableCell padding="checkbox"></TableCell>
+          <TableCell padding="checkbox">
+            <Checkbox
+              checked={allTodosSelected}
+              onChange={(event) => { handleAllTodosStateChange(event.target.checked) }}
+            />
+          </TableCell>
           <TableCell>Name</TableCell>
           <TableCell>Priority</TableCell>
           <TableCell>Due Date</TableCell>
