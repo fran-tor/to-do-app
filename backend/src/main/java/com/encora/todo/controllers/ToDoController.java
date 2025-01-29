@@ -38,12 +38,11 @@ public class ToDoController {
         @RequestParam(required = false) String priority
     ) {
         // return toDoService.getTodos(page, size, sortBy, sortOrder, done, text, priority);
-        MetricsModel metrics = toDoService.getMetrics();
         List<ToDoModel> todos = toDoService.getTodos(page, size, sortBy, sortOrder, done, text, priority);
+        MetricsModel metrics = toDoService.getMetrics();
         TodoResponse response = new TodoResponse();
         response.setMetrics(metrics);
         response.setTodos(todos);
-        System.out.println("pages: " + response.getMetrics().getPages());
         return response;
     }
 
