@@ -43,6 +43,7 @@ public class ToDoController {
         TodoResponse response = new TodoResponse();
         response.setMetrics(metrics);
         response.setTodos(todos);
+        System.out.println("pages: " + response.getMetrics().getPages());
         return response;
     }
 
@@ -54,8 +55,7 @@ public class ToDoController {
     @PostMapping
     public ToDoModel addTodo(@RequestBody ToDoModel toDo) {
         toDoService.addTodo(toDo);
-        List<ToDoModel> todos = toDoService.getTodos(0, 0, null, null, null, null, null);
-        return todos.get(todos.size());
+        return toDo;
     }
 
     @DeleteMapping("/{id}")

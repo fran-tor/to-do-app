@@ -1,8 +1,13 @@
-import { Box, Pagination, Stack, Typography } from "@mui/material";
+import { Box, Pagination, Stack } from "@mui/material";
 import React from "react";
-import { useTodosFilter } from "../context/context";
+import { useTodosFilter } from "../context/TodosFilterContext";
+import { useMetrics } from "../context/MetricsContext";
 
-const TodosPagination: React.FC = () => {
+interface Props {
+  pages: number;
+}
+
+const TodosPagination: React.FC<Props> = ({ pages }) => {
   const { setTodosFilterAttributes } = useTodosFilter();
   const [page, setPage] = React.useState(1);
   const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
@@ -13,7 +18,7 @@ const TodosPagination: React.FC = () => {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
       <Stack spacing={2}>
-        <Pagination count={10} page={page} onChange={handleChange} />
+        <Pagination count={pages} page={page} onChange={handleChange} />
       </Stack>
     </Box>
   );

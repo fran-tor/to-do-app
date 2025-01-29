@@ -17,6 +17,7 @@ public class ToDoService {
     ToDoRepository toDoRepository;
 
     private final AtomicLong counter = new AtomicLong();
+    private int pages = 0;
 
     public List<ToDoModel> getTodos(int page, int size, String sortBy, String sortOrder, String done, String text, String priority) {
         List<ToDoModel> todos = toDoRepository.getToDoList();
@@ -55,6 +56,7 @@ public class ToDoService {
         // Pagination
         int start = page * size;
         int end = Math.min(start + size, todos.size());
+        setPages((int) Math.ceil((double) todos.size() / size));
         return todos.subList(start, end);
     }
 
@@ -77,7 +79,15 @@ public class ToDoService {
 
     public MetricsModel getMetrics() {
         MetricsModel metrics = new MetricsModel();
-        metrics.setPagesCount(toDoRepository.getToDoList().size());
+        metrics.setPages(getPages());
         return metrics;
+    }
+
+    public int getPages() {
+        return pages;
+    }
+
+    public void setPages(int pages) {
+        this.pages = pages;
     }
 }

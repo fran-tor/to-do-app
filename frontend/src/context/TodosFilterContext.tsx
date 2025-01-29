@@ -19,11 +19,11 @@ const TodosFilterContext = createContext<TodosFilterContextType>({
   setTodosFilterAttributes: () => {},
 });
 
-interface TodoListContextProviderProps {
+interface Props {
   children: React.ReactNode;
 }
 
-export const TodoListContextProvider: React.FC<TodoListContextProviderProps> = ({ children }) => {
+export const TodoListContextProvider: React.FC<Props> = ({ children }) => {
   const [todosFilterAttributes, setTodosFilterAttributes] = useState<TodosFilterAttributes>({
     page: 0,
     size: 10,

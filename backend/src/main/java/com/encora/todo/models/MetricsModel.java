@@ -2,13 +2,13 @@ package com.encora.todo.models;
 
 public class MetricsModel {
   
-    private long pagesCount;
+    private long pages;
 
-    public long getPagesCount() {
-        return pagesCount;
+    public long getPages() {
+        return pages;
     }
 
-    public void setPagesCount(long pagesCount) {
-        this.pagesCount = pagesCount;
+    public void setPages(long pages) {
+        this.pages = pages;
     }
 }

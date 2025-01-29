@@ -1,5 +1,5 @@
 import './App.css'
-import { TodoListContextProvider } from './context/context'
+import { TodoListContextProvider } from './context/TodosFilterContext'
 import TodoApp from './views/TodoApp'
 
 function App() {

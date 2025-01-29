@@ -1,12 +1,12 @@
 import { Box, FormControl, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import * as React from 'react';
-import { useTodosFilter } from '../context/context';
+import { useTodosFilter } from '../context/TodosFilterContext';
 
 const TodosFilter: React.FC = () => {
   const [newTodoText, setNewTodoText] = React.useState('');
   const [newTodoPriority, setNewTodoPriority] = React.useState('All');
   const [newTodoState, setNewTodoState] = React.useState('All');
-  const { todosFilterAttributes, setTodosFilterAttributes } = useTodosFilter();
+  const { setTodosFilterAttributes } = useTodosFilter();
 
   // handleSearch = async () => {
   //   await todos.getAll(newTodoText, newTodoPriority, newTodoState)

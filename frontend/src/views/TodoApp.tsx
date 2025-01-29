@@ -10,7 +10,7 @@ import NewTodoModal from './NewTodoModal';
 import { todos } from '../api/todos';
 import { Todo } from '../types';
 import EditTodoModal from './EditTodoModal';
-import { useTodosFilter } from '../context/context';
+import { useTodosFilter } from '../context/TodosFilterContext';
 import TodosPagination from './Pagination';
 
 const TodoApp = () => {
@@ -20,12 +20,16 @@ const TodoApp = () => {
   const [isNewTodoModalOpen, setIsNewTodoModalOpen] = useState(false);
   const [isEditTodoModalOpen, setIsEditTodoModalOpen] = useState(false);
   const { todosFilterAttributes } = useTodosFilter();
+  const [metrics, setMetrics] = useState({ pages: 0 });
 
   const fetchTodos = useCallback(async () => {
     await todos.getAll(todosFilterAttributes)
-      .then((data) => setTodosList(data.todos))
+      .then((data) => {
+        setTodosList(data.todos);
+        setMetrics({ pages: data.metrics.pages });
+      })
       .catch(() => setServerError('Error fetching data'));
-  }, [todosFilterAttributes]);
+  }, [setMetrics, todosFilterAttributes]);
 
   useEffect(() => {
     fetchTodos();
@@ -64,8 +68,8 @@ const TodoApp = () => {
       ) : (
         <TodosTable todosList={todosList} onTodosListChange={handleTodosListChange} onTodoEdit={handleEditTodoModalOpen} />
       )}
-      <TodosPagination />
-      <Metrics />
+      <TodosPagination pages={metrics.pages} />
+      <Metrics metrics={metrics} />
       <NewTodoModal isOpen={isNewTodoModalOpen} handleClose={handleNewTodoModalClose} onTodoAdded={handleTodosListChange} />
       <EditTodoModal isOpen={isEditTodoModalOpen} handleClose={handleEditTodoModalClose} onTodoEdited={handleTodosListChange} todo={todoToEdit} />
     </Box>

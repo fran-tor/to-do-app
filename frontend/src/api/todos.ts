@@ -2,14 +2,12 @@ import { Todo, TodosFilterAttributes } from "../types";
 
 export const BASE_URL = 'http://localhost:9090/';
 const todosEndpoint = "todos";
-const metricsEndpoint = "todos/metrics";
 const headers = {
   "Content-Type": "application/json",
 };
 
 export const todos = {
   async getAll(todosFilterAttributes: TodosFilterAttributes) {
-
     const params = new URLSearchParams();
     for (const [key, value] of Object.entries(todosFilterAttributes)) {
       if (value !== undefined && value !== null) {

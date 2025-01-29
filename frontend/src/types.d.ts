@@ -26,3 +26,7 @@ export interface TodosFilterAttributes {
   text: string;
   priority: string;
 }
+
+export interface TodosMetrics {
+  pages: number;
+}
