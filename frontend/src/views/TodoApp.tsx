@@ -23,7 +23,7 @@ const TodoApp = () => {
 
   const fetchTodos = useCallback(async () => {
     await todos.getAll(todosFilterAttributes)
-      .then((data) => setTodosList(data))
+      .then((data) => setTodosList(data.todos))
       .catch(() => setServerError('Error fetching data'));
   }, [todosFilterAttributes]);
 

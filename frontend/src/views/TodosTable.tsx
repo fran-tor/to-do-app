@@ -22,6 +22,7 @@ const TodosTable: React.FC<Props> = ({ todosList, onTodosListChange, onTodoEdit 
 
   const handleTodoStateChange = async (todo: Todo, checked: boolean) => {
     todo.done = checked;
+    todo.doneDate = checked ? new Date().toISOString() : undefined;
     await todos.update(todo).finally(async () => {
       onTodosListChange();
     });

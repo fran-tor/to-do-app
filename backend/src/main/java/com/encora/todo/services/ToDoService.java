@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.encora.todo.models.MetricsModel;
 import com.encora.todo.models.ToDoModel;
 import com.encora.todo.repositories.ToDoRepository;
 
@@ -72,5 +73,11 @@ public class ToDoService {
 
     public void updateTodoById(Long id, ToDoModel toDo) {
         toDoRepository.updateToDoById(id, toDo);
+    }
+
+    public MetricsModel getMetrics() {
+        MetricsModel metrics = new MetricsModel();
+        metrics.setPagesCount(toDoRepository.getToDoList().size());
+        return metrics;
     }
 }

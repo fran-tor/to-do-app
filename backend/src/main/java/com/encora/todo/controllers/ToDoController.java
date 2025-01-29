@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.encora.todo.models.MetricsModel;
 import com.encora.todo.models.ToDoModel;
+import com.encora.todo.models.TodoResponse;
 import com.encora.todo.services.ToDoService;
 
 @RestController
@@ -26,7 +28,7 @@ public class ToDoController {
     ToDoService toDoService;
 
     @GetMapping
-    public List<ToDoModel> getTodos(
+    public TodoResponse getTodos(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size,
         @RequestParam(required = false) String sortBy,
@@ -35,7 +37,18 @@ public class ToDoController {
         @RequestParam(required = false) String text,
         @RequestParam(required = false) String priority
     ) {
-        return toDoService.getTodos(page, size, sortBy, sortOrder, done, text, priority);
+        // return toDoService.getTodos(page, size, sortBy, sortOrder, done, text, priority);
+        MetricsModel metrics = toDoService.getMetrics();
+        List<ToDoModel> todos = toDoService.getTodos(page, size, sortBy, sortOrder, done, text, priority);
+        TodoResponse response = new TodoResponse();
+        response.setMetrics(metrics);
+        response.setTodos(todos);
+        return response;
+    }
+
+    @GetMapping("/metrics")
+    public MetricsModel getMetrics() {
+        return toDoService.getMetrics();
     }
 
     @PostMapping

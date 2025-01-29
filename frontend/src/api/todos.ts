@@ -1,23 +1,14 @@
 import { Todo, TodosFilterAttributes } from "../types";
 
 export const BASE_URL = 'http://localhost:9090/';
-const endpoint = "todos";
+const todosEndpoint = "todos";
+const metricsEndpoint = "todos/metrics";
 const headers = {
   "Content-Type": "application/json",
 };
 
 export const todos = {
-  // async getAll(page = 0, size = 10, sortBy = '', sortOrder = '', done: boolean | null = null, name = '', priority = '') {
   async getAll(todosFilterAttributes: TodosFilterAttributes) {
-    // const params = new URLSearchParams({
-    //   page: page.toString(),
-    //   size: size.toString(),
-    //   sortBy,
-    //   sortOrder,
-    //   done: done?.toString() || '',
-    //   name,
-    //   priority,
-    // });
 
     const params = new URLSearchParams();
     for (const [key, value] of Object.entries(todosFilterAttributes)) {
@@ -26,12 +17,12 @@ export const todos = {
       }
     }
 
-    const response = await fetch(`${BASE_URL}${endpoint}?${params.toString()}`);
+    const response = await fetch(`${BASE_URL}${todosEndpoint}?${params.toString()}`);
     const data = await response.json();
     return data;
   },
   async create(todo: Todo) {
-    const response = await fetch(`${BASE_URL}${endpoint}`, {
+    const response = await fetch(`${BASE_URL}${todosEndpoint}`, {
       method: "POST",
       headers: headers,
       body: JSON.stringify(todo),
@@ -39,7 +30,7 @@ export const todos = {
     return await response.json();
   },
   async update(todo: Todo) {
-    const response = await fetch(`${BASE_URL}${endpoint}/${todo.id}`, {
+    const response = await fetch(`${BASE_URL}${todosEndpoint}/${todo.id}`, {
       method: "PUT",
       headers: headers,
       body: JSON.stringify(todo),
@@ -47,12 +38,12 @@ export const todos = {
     return await response.json();
   },
   async delete(id: number) {
-    const response = await fetch(`${BASE_URL}${endpoint}/${id}`, {
+    const response = await fetch(`${BASE_URL}${todosEndpoint}/${id}`, {
       method: "DELETE",
     });
     return await response.json();
   },
   getFormattedDate(date: string) {
     return new Date(date).toLocaleDateString();
-  }
+  },
 }

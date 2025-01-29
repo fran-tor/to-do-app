@@ -9,7 +9,12 @@ export interface Todo {
 }
 
 export interface Metrics {
+  pages: number;
+}
 
+export interface TodosResponse {
+  metrics: Metrics;
+  todos: Todo[];
 }
 
 export interface TodosFilterAttributes {

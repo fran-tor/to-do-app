@@ -13,7 +13,6 @@ const TodosPagination: React.FC = () => {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
       <Stack spacing={2}>
-        <Typography>Page: {page}</Typography>
         <Pagination count={10} page={page} onChange={handleChange} />
       </Stack>
     </Box>
