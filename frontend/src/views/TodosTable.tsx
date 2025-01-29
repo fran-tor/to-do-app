@@ -2,6 +2,7 @@ import React from "react";
 import { Todo } from "../types";
 import { Button, Checkbox, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import { todos } from "../api/todos";
+import { useTodosFilter } from "../context/TodosFilterContext";
 
 interface Props {
   todosList: Todo[];
@@ -10,7 +11,11 @@ interface Props {
 }
 
 const TodosTable: React.FC<Props> = ({ todosList, onTodosListChange, onTodoEdit }) => {
+  const priorityText = "Priority < >";
+  const dueDateText = "Due Date < >";
   const [allTodosSelected, setAllTodosSelected] = React.useState(false);
+  const { setTodosFilterAttributes } = useTodosFilter();
+  const [sortOrder, setSortOrder] = React.useState('asc');
 
   const handleTodoDelete = async (todoId: number) => {
     await todos.delete(todoId).finally(async () => {
@@ -41,6 +46,11 @@ const TodosTable: React.FC<Props> = ({ todosList, onTodosListChange, onTodoEdit 
     }
   }
 
+  const handleOnPriorityClick = () => {
+    setTodosFilterAttributes(prev => ({ ...prev, sortBy: 'priority', sortOrder: sortOrder === 'asc' ? 'desc' : 'asc' }));
+    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+  }
+
   return (
     <Table>
       <TableHead>
@@ -52,8 +62,13 @@ const TodosTable: React.FC<Props> = ({ todosList, onTodosListChange, onTodoEdit 
             />
           </TableCell>
           <TableCell>Name</TableCell>
-          <TableCell>Priority</TableCell>
-          <TableCell>Due Date</TableCell>
+          <TableCell
+            onClick={() => handleOnPriorityClick()}
+            style={{ cursor: 'pointer' }}
+          >
+            {priorityText}
+          </TableCell>
+          <TableCell>{dueDateText}</TableCell>
           <TableCell>Actions</TableCell>
         </TableRow>
       </TableHead>

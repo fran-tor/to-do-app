@@ -18,12 +18,15 @@ public class ToDoService {
 
     private final AtomicLong counter = new AtomicLong();
     private int pages = 0;
+    private final List<String> priorities = List.of("Low", "Medium", "High");
+    private final List<String> statuses = List.of("true", "false");
+    private final List<String> sortFields = List.of("priority", "dueDate");
 
     public List<ToDoModel> getTodos(int page, int size, String sortBy, String sortOrder, String done, String text, String priority) {
         List<ToDoModel> todos = toDoRepository.getToDoList();
 
         // Filter by done/undone
-        if (done != null && !done.isEmpty() && done.matches("^(true|false)$")) {
+        if (done != null && !done.isEmpty() && statuses.contains(done)) {
             boolean isDone = Boolean.parseBoolean(done);
             todos = todos.stream().filter(todo -> todo.isDone() == isDone).collect(Collectors.toList());
         }
@@ -34,18 +37,18 @@ public class ToDoService {
         }
 
         // Filter by priority
-        if (priority != null && !priority.isEmpty() && priority.matches("^(Low|Medium|High)$")) {
+        if (priority != null && !priority.isEmpty() && priorities.contains(priority)) {
             todos = todos.stream().filter(todo -> todo.getPriority().equalsIgnoreCase(priority)).collect(Collectors.toList());
         }
 
         // Sort by priority or due date
         if (sortBy != null && !sortBy.isEmpty()) {
-            if (sortBy.equalsIgnoreCase("priority")) {
+            if (sortBy.equalsIgnoreCase(sortFields.get(0))) {
                 todos = todos.stream().sorted((a, b) -> {
-                    int comparison = a.getPriority().compareToIgnoreCase(b.getPriority());
+                    int comparison = Integer.compare(priorities.indexOf(a.getPriority()), priorities.indexOf(b.getPriority()));
                     return sortOrder != null && sortOrder.equalsIgnoreCase("desc") ? -comparison : comparison;
                 }).collect(Collectors.toList());
-            } else if (sortBy.equalsIgnoreCase("dueDate")) {
+            } else if (sortBy.equalsIgnoreCase(sortFields.get(1))) {
                 todos = todos.stream().sorted((a, b) -> {
                     int comparison = a.getDueDate().compareToIgnoreCase(b.getDueDate());
                     return sortOrder != null && sortOrder.equalsIgnoreCase("desc") ? -comparison : comparison;

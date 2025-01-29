@@ -15,6 +15,7 @@ export const todos = {
       }
     }
 
+    console.log('params', params.toString());
     const response = await fetch(`${BASE_URL}${todosEndpoint}?${params.toString()}`);
     const data = await response.json();
     return data;
