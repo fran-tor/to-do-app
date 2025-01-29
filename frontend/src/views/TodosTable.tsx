@@ -17,6 +17,10 @@ const TodosTable: React.FC<Props> = ({ todosList, onTodosListChange, onTodoEdit 
   }
 
   const handleTodoEdit = (todo: Todo) => {
+    if (todo.done) {
+      alert('Todo must be undone to edit');
+      return;
+    }
     onTodoEdit(todo);
   }
 
