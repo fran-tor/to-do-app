@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { Button, FormControl, MenuItem, Select, TextField } from '@mui/material';
+import { Button, FormControl, MenuItem, Select, Switch, TextField } from '@mui/material';
 import { todos } from '../api/todos';
 import { Todo } from '../types';
 import { ActionType } from '../constants';
@@ -35,24 +35,42 @@ interface Props {
 const BaseModal: React.FC<Props> = ({ isOpen, handleClose, onTodoActionDone, actionType, todo }) => {
   const titleText = actionType === ActionType.CREATE ? 'Create a new To Do' : 'Edit To Do';
   const actionButtonText = actionType === ActionType.CREATE ? 'Create' : 'Edit';
+  const [isDueDateEnabled, setIsDueDateEnabled] = React.useState(false);
   const [todoText, settodoText] = React.useState('');
-  const [todoPriority, settodoPriority] = React.useState('Low');
+  const [todoPriority, setTodoPriority] = React.useState('Low');
   const [todoDueDate, setTodoDueDate] = React.useState('');
 
   useEffect(() => {
     if (todo && actionType === ActionType.EDIT) {
       settodoText(todo.text);
-      settodoPriority(todo.priority);
+      setTodoPriority(todo.priority);
       setTodoDueDate(todo.dueDate || '');
+      setIsDueDateEnabled(!!todo.dueDate);
     }
-  }, [todo, actionType]);
+  }, [todo, actionType, isOpen]);
+
+  const handleCloseModal = () => {
+    setIsDueDateEnabled(false);
+    handleClose();
+  }
+
+  const verifyDueDateState = () => {
+    if (isDueDateEnabled && todoDueDate === '') {
+      alert('Due date cannot be empty');
+      return false;
+    }
+    return true;
+  }
 
   const handleCreate = () => {
     if (todoText.trim() !== '') {
+      if (!verifyDueDateState()) {
+        return;
+      }
       const newTodo: Todo = {
         id: 0,
         text: todoText,
-        dueDate: todoDueDate,
+        dueDate: isDueDateEnabled ? todoDueDate : undefined,
         done: false,
         doneDate: undefined,
         priority: todoPriority,
@@ -67,9 +85,9 @@ const BaseModal: React.FC<Props> = ({ isOpen, handleClose, onTodoActionDone, act
         .finally(() => {
           // Resets values and closes modal after the request is done
           settodoText('');
-          settodoPriority('Low');
+          setTodoPriority('Low');
           setTodoDueDate('');
-          handleClose();
+          handleCloseModal();
           // onTodoActionDone();
         });
     } else {
@@ -79,20 +97,23 @@ const BaseModal: React.FC<Props> = ({ isOpen, handleClose, onTodoActionDone, act
 
   const handleEdit = () => {
     if (todoText.trim() !== '') {
+      if (!verifyDueDateState()) {
+        return;
+      }
       const editedTodo: Todo = {
         ...todo,
         id: todo?.id ?? 0,
         text: todoText,
-        dueDate: todoDueDate,
+        dueDate: isDueDateEnabled ? todoDueDate : undefined,
         priority: todoPriority,
         creationDate: todo?.creationDate ?? new Date().toISOString(),
       };
       todos.update(editedTodo).finally(() => {
         // Resets values and closes modal after the request is done
         settodoText('');
-        settodoPriority('Low');
+        setTodoPriority('Low');
         setTodoDueDate('');
-        handleClose();
+        handleCloseModal();
         onTodoActionDone();
       });
     } else {
@@ -108,11 +129,15 @@ const BaseModal: React.FC<Props> = ({ isOpen, handleClose, onTodoActionDone, act
     }
   }
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsDueDateEnabled(event.target.checked);
+  }
+
   return (
     <div>
       <Modal
         open={isOpen}
-        onClose={handleClose}
+        onClose={handleCloseModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -136,7 +161,7 @@ const BaseModal: React.FC<Props> = ({ isOpen, handleClose, onTodoActionDone, act
                 labelId="priority-select-label"
                 id="priority-select"
                 value={todoPriority}
-                onChange={(e) => settodoPriority(e.target.value as string)}
+                onChange={(e) => setTodoPriority(e.target.value as string)}
                 label=""
               >
                 <MenuItem value="Low">Low</MenuItem>
@@ -145,16 +170,27 @@ const BaseModal: React.FC<Props> = ({ isOpen, handleClose, onTodoActionDone, act
               </Select>
             </FormControl>
           </Box>
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <p style={{ minWidth: '60px' }}>Due Date</p>
-            <TextField
-              type="date"
-              value={todoDueDate}
-              onChange={(e) => setTodoDueDate(e.target.value)}
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
+            <p style={{ minWidth: '60px' }}>Enable Due Date</p>
+            <Switch
+              checked={isDueDateEnabled}
+              onChange={handleChange}
+              inputProps={{ 'aria-label': 'controlled' }}
             />
           </Box>
+          {isDueDateEnabled && (
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <p style={{ minWidth: '60px' }}>Due Date</p>
+              <TextField
+                type="date"
+                value={todoDueDate}
+                onChange={(e) => setTodoDueDate(e.target.value)}
+                required
+              />
+            </Box>
+          )}
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 2 }}>
-            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleCloseModal}>Cancel</Button>
             <Button variant="contained" onClick={handleAction}>{actionButtonText}</Button>
           </Box>
         </Box>
