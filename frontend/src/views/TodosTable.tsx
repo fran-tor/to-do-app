@@ -51,6 +51,11 @@ const TodosTable: React.FC<Props> = ({ todosList, onTodosListChange, onTodoEdit 
     setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
   }
 
+  const handleOnDueDateClick = () => {
+    setTodosFilterAttributes(prev => ({ ...prev, sortBy: 'dueDate', sortOrder: sortOrder === 'asc' ? 'desc' : 'asc' }));
+    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+  }
+
   return (
     <Table>
       <TableHead>
@@ -68,7 +73,12 @@ const TodosTable: React.FC<Props> = ({ todosList, onTodosListChange, onTodoEdit 
           >
             {priorityText}
           </TableCell>
-          <TableCell>{dueDateText}</TableCell>
+          <TableCell
+            onClick={() => handleOnDueDateClick()}
+            style={{ cursor: 'pointer' }}
+          >
+            {dueDateText}
+          </TableCell>
           <TableCell>Actions</TableCell>
         </TableRow>
       </TableHead>

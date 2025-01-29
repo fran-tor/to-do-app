@@ -50,7 +50,9 @@ public class ToDoService {
                 }).collect(Collectors.toList());
             } else if (sortBy.equalsIgnoreCase(sortFields.get(1))) {
                 todos = todos.stream().sorted((a, b) -> {
-                    int comparison = a.getDueDate().compareToIgnoreCase(b.getDueDate());
+                    String dueDateA = a.getDueDate() != null ? a.getDueDate() : "";
+                    String dueDateB = b.getDueDate() != null ? b.getDueDate() : "";
+                    int comparison = dueDateA.compareToIgnoreCase(dueDateB);
                     return sortOrder != null && sortOrder.equalsIgnoreCase("desc") ? -comparison : comparison;
                 }).collect(Collectors.toList());
             }
