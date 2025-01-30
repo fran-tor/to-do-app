@@ -30,7 +30,7 @@ const TodosFilter: React.FC = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, borderColor: 'primary.main', border: 1, p: 2 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, borderColor: 'primary.main', border: 1, p: 2, borderRadius: 2 }}>
       <Box sx={{ display: 'flex', gap: 2 }}>
         <p style={{ minWidth: '60px' }}>Name</p>
         <TextField

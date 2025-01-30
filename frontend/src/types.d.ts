@@ -8,15 +8,6 @@ export interface Todo {
   creationDate: string;
 }
 
-export interface Metrics {
-  pages: number;
-}
-
-export interface TodosResponse {
-  metrics: Metrics;
-  todos: Todo[];
-}
-
 export interface TodosFilterAttributes {
   page: number;
   size: number;
@@ -29,8 +20,8 @@ export interface TodosFilterAttributes {
 
 export interface TodosMetrics {
   pages: number;
-  avgTime: string;
-  avgTimeLow: string;
-  avgTimeMedium: string;
-  avgTimeHigh: string;
+  avgTime: number;
+  avgTimeLow: number;
+  avgTimeMedium: number;
+  avgTimeHigh: number;
 }

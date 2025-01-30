@@ -44,5 +44,5 @@ export const todos = {
   },
   getFormattedDate(date: string) {
     return new Date(date).toLocaleDateString();
-  },
+  }
 }

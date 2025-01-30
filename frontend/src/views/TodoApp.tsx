@@ -8,7 +8,7 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import NewTodoModal from './NewTodoModal';
 import { todos } from '../api/todos';
-import { Todo } from '../types';
+import { Todo, TodosMetrics } from '../types';
 import EditTodoModal from './EditTodoModal';
 import { useTodosFilter } from '../context/TodosFilterContext';
 import TodosPagination from './Pagination';
@@ -20,13 +20,13 @@ const TodoApp = () => {
   const [isNewTodoModalOpen, setIsNewTodoModalOpen] = useState(false);
   const [isEditTodoModalOpen, setIsEditTodoModalOpen] = useState(false);
   const { todosFilterAttributes } = useTodosFilter();
-  const [metrics, setMetrics] = useState({ pages: 0 });
+  const [metrics, setMetrics] = useState<TodosMetrics>({ pages: 0, avgTime: 0, avgTimeLow: 0, avgTimeMedium: 0, avgTimeHigh: 0 });
 
   const fetchTodos = useCallback(async () => {
     await todos.getAll(todosFilterAttributes)
       .then((data) => {
         setTodosList(data.todos);
-        setMetrics({ pages: data.metrics.pages });
+        setMetrics(data.metrics);
       })
       .catch(() => setServerError('Error fetching data'));
   }, [setMetrics, todosFilterAttributes]);
