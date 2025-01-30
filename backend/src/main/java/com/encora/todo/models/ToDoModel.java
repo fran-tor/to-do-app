@@ -1,6 +1,6 @@
 package com.encora.todo.models;
 
-public class ToDoModel {
+public class TodoModel {
 
     private Long id;
     private String text;

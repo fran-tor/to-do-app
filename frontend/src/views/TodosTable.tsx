@@ -46,7 +46,7 @@ const TodosTable: React.FC<Props> = ({ todosList, onTodosListChange, onTodoEdit 
     }
   }
 
-  const handleOnPriorityClick = () => {
+  const handleOnPriorityClick = () => { 
     setTodosFilterAttributes(prev => ({ ...prev, sortBy: 'priority', sortOrder: sortOrder === 'asc' ? 'desc' : 'asc' }));
     setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
   }

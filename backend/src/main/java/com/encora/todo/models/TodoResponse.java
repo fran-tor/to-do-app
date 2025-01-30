@@ -4,7 +4,7 @@ import java.util.List;
 
 public class TodoResponse {
     private MetricsModel metrics;
-    private List<ToDoModel> todos;
+    private List<TodoModel> todos;
 
     public MetricsModel getMetrics() {
         return metrics;
@@ -14,11 +14,11 @@ public class TodoResponse {
         this.metrics = metrics;
     }
 
-    public List<ToDoModel> getTodos() {
+    public List<TodoModel> getTodos() {
         return todos;
     }
 
-    public void setTodos(List<ToDoModel> todos) {
+    public void setTodos(List<TodoModel> todos) {
         this.todos = todos;
     }
 }

@@ -15,17 +15,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.encora.todo.models.MetricsModel;
-import com.encora.todo.models.ToDoModel;
+import com.encora.todo.models.TodoModel;
 import com.encora.todo.models.TodoResponse;
-import com.encora.todo.services.ToDoService;
+import com.encora.todo.services.TodoService;
 
 @RestController
 @RequestMapping("/todos")
 @CrossOrigin(origins = "http://localhost:8080")
-public class ToDoController {
+public class TodoController {
 
     @Autowired
-    ToDoService toDoService;
+    TodoService todoService;
 
     @GetMapping
     public TodoResponse getTodos(
@@ -37,32 +37,27 @@ public class ToDoController {
         @RequestParam(required = false) String text,
         @RequestParam(required = false) String priority
     ) {
-        List<ToDoModel> todos = toDoService.getTodos(page, size, sortBy, sortOrder, done, text, priority);
-        MetricsModel metrics = toDoService.getMetrics();
+        List<TodoModel> todos = todoService.getTodos(page, size, sortBy, sortOrder, done, text, priority);
+        MetricsModel metrics = todoService.getMetrics();
         TodoResponse response = new TodoResponse();
         response.setMetrics(metrics);
         response.setTodos(todos);
         return response;
     }
 
-    @GetMapping("/metrics")
-    public MetricsModel getMetrics() {
-        return toDoService.getMetrics();
-    }
-
     @PostMapping
-    public ToDoModel addTodo(@RequestBody ToDoModel toDo) {
-        toDoService.addTodo(toDo);
+    public TodoModel addTodo(@RequestBody TodoModel toDo) {
+        todoService.addTodo(toDo);
         return toDo;
     }
 
     @DeleteMapping("/{id}")
     public void deleteTodoById(@PathVariable Long id) {
-        toDoService.deleteTodoById(id);
+        todoService.deleteTodoById(id);
     }
 
     @PutMapping("/{id}")
-    public void updateTodoById(@PathVariable Long id, @RequestBody ToDoModel toDo) {
-        toDoService.updateTodoById(id, toDo);
+    public void updateTodoById(@PathVariable Long id, @RequestBody TodoModel toDo) {
+        todoService.updateTodoById(id, toDo);
     }
 }

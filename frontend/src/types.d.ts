@@ -29,4 +29,8 @@ export interface TodosFilterAttributes {
 
 export interface TodosMetrics {
   pages: number;
+  avgTime: string;
+  avgTimeLow: string;
+  avgTimeMedium: string;
+  avgTimeHigh: string;
 }

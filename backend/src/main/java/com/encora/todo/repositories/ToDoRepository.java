@@ -5,26 +5,26 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.encora.todo.models.ToDoModel;
+import com.encora.todo.models.TodoModel;
 
 @Repository
-public class ToDoRepository {
-    private final List<ToDoModel> toDoList = new ArrayList<>();
+public class TodoRepository {
+    private final List<TodoModel> todoList = new ArrayList<>();
 
-    public List<ToDoModel> getToDoList() {
-        return toDoList;
+    public List<TodoModel> getTodoList() {
+        return todoList;
     }
 
-    public void setToDo(ToDoModel toDo) {
-        toDoList.add(toDo);
+    public void setToDo(TodoModel toDo) {
+        todoList.add(toDo);
     }
 
     public void deleteToDoById(Long id) {
-        toDoList.removeIf(toDo -> toDo.getId().equals(id));
+        todoList.removeIf(toDo -> toDo.getId().equals(id));
     }
 
-    public void updateToDoById(Long id, ToDoModel toDo) {
-        toDoList.stream()
+    public void updateToDoById(Long id, TodoModel toDo) {
+        todoList.stream()
                 .filter(todo -> todo.getId().equals(id))
                 .forEach(todo -> {
                     todo.setText(toDo.getText());
