@@ -26,6 +26,18 @@ public class TodoServiceTest {
         MockitoAnnotations.openMocks(this);
     }
 
+    TodoModel getTodo() {
+        TodoModel todo = new TodoModel();
+        todo.setId(1L);
+        todo.setText("Test");
+        todo.setDueDate("2025-01-31");
+        todo.setDone(true);
+        todo.setDoneDate("2025-01-31T03:30:31.631Z");
+        todo.setPriority("Low");
+        todo.setCreationDate("2025-01-31T03:27:04.275Z");
+        return todo;
+    }
+
     @Test
     void testGetTodos() {
         List<TodoModel> todos = todoService.getTodos(0, 10, "", "", "", "", "");
@@ -72,5 +84,46 @@ public class TodoServiceTest {
     void testGetTodosWrongPriority() {
         List<TodoModel> todos = todoService.getTodos(0, 10, "", "", "", "", wrongField);
         assert(todos == null);
+    }
+
+    @Test
+    void testAddTodo() {
+        TodoModel todo = getTodo();
+        assert(todoService.addTodo(todo));
+    }
+
+    @Test
+    void testAddTodoWrongID() {
+        TodoModel todo = getTodo();
+        todo.setId(-1L);
+        assert(!todoService.addTodo(todo));
+    }
+
+    @Test
+    void testAddTodoWrongText() {
+        TodoModel todo = getTodo();
+        todo.setText(null);
+        assert(!todoService.addTodo(todo));
+    }
+
+    @Test
+    void testAddTodoWrongDueDate() {
+        TodoModel todo = getTodo();
+        todo.setDueDate(wrongField);
+        assert(!todoService.addTodo(todo));
+    }
+
+    @Test
+    void testAddTodoWrongDoneDate() {
+        TodoModel todo = getTodo();
+        todo.setDoneDate(wrongField);
+        assert(!todoService.addTodo(todo));
+    }
+
+    @Test
+    void testAddTodoWrongPriority() {
+        TodoModel todo = getTodo();
+        todo.setPriority(wrongField);
+        assert(!todoService.addTodo(todo));
     }
 }

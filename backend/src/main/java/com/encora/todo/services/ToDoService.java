@@ -30,6 +30,43 @@ public class TodoService {
     private final List<String> sortFields = List.of("priority", "dueDate", "");
     private final List<String> orderFields = List.of("asc", "desc", "");
 
+    private boolean validateID(Long id) {
+        if (id == null || id < 0) {
+            System.out.println("Invalid ID " + id + ". Use a number greater than or equal to 0.");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateTodoFields(TodoModel todo) {
+        if (!validateID(todo.getId())) {
+            return false;
+        }
+
+        if (todo.getText() == null || todo.getText().isEmpty()) {
+            System.out.println("Invalid text field. Use a valid string.");
+            return false;
+        }
+
+        // Verify if dates are in the correct format (ISO-8601)
+        if (todo.getDueDate() != null && !todo.getDueDate().isEmpty() && !todo.getDueDate().matches("^\\d{4}-\\d{2}-\\d{2}$")) {
+            System.out.println("Received invalid date format " + todo.getDueDate() + ". Please use the ISO-8601 format (YYYY-MM-DD).");
+            return false;
+        }
+
+        if (todo.getDoneDate() != null && !todo.getDoneDate().isEmpty() && !todo.getDoneDate().matches("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$")) {
+            System.out.println("Received invalid date format " + todo.getDoneDate() + ". Please use the ISO-8601 format (YYYY-MM-DDTHH:MM:SS.SSSZ).");
+            return false;
+        }
+
+        if (todo.getPriority() == null || !priorities.contains(todo.getPriority())) {
+            System.out.println("Invalid priority field. Use one of: " + priorities);
+            return false;
+        }
+
+        return true;
+    }
+
     public List<TodoModel> getTodos(int page, int size, String sortBy, String sortOrder, String done, String text, String priority) {
         List<TodoModel> todos = todoRepository.getTodoList();
 
@@ -108,13 +145,13 @@ public class TodoService {
         return todos.subList(start, end);
     }
 
-    public void addTodo(TodoModel todo) {
-        todo.setId(counter.incrementAndGet());
-        // Verify if dates are in the correct format (ISO-8601)
-        if (todo.getDueDate() != null && !todo.getDueDate().isEmpty() && !todo.getDueDate().matches("^\\d{4}-\\d{2}-\\d{2}$")) {
-            throw new IllegalArgumentException("Received invalid date format " + todo.getDueDate() + ". Please use the ISO-8601 format (YYYY-MM-DD).");
+    public boolean addTodo(TodoModel todo) {
+        if (!validateTodoFields(todo)) {
+            return false;
         }
+        todo.setId(counter.incrementAndGet());
         todoRepository.setToDo(todo);
+        return true;
     }
 
     public void deleteTodoById(Long id) {
