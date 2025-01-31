@@ -1,6 +1,6 @@
 # To Do app
 
-This project is an application to manage tasks, the user can create, edit and delete them. The app allows the user to filter the tasks by name, priority and state (done or undoen), in addition to sort by priority or due date. It also has a metrics section where the user can see the average time beetween the creation and done date of all the tasks and also by priority.
+This project is an application to manage tasks, the user can create, edit and delete them. The app allows the user to filter the tasks by name, priority and state (done or undone), in addition to sort by priority or due date. It also has a metrics section where the user can see the average time between the creation and done date of all the tasks and also by priority.
 
 ![Screenshot](/assets/Screenshot.png)
 
