@@ -24,7 +24,6 @@ describe('EditTodoModal', () => {
 
   it('does not render when closed', () => {
     render(<EditTodoModal isOpen={false} handleClose={mockHandleClose} onTodoEdited={mockOnTodoEdited} todo={todo} />)
-    screen.debug();
     expect(screen.queryByText('Edit To Do')).not.toBeInTheDocument();
   });
 });
