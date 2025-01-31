@@ -25,15 +25,46 @@ public class TodoService {
     private long avgTimeMedium = 0;
     private long avgTimeHigh = 0;
 
-    private final List<String> priorities = List.of("Low", "Medium", "High");
-    private final List<String> statuses = List.of("true", "false");
-    private final List<String> sortFields = List.of("priority", "dueDate");
+    private final List<String> priorities = List.of("Low", "Medium", "High", "");
+    private final List<String> statuses = List.of("true", "false", "");
+    private final List<String> sortFields = List.of("priority", "dueDate", "");
+    private final List<String> orderFields = List.of("asc", "desc", "");
 
     public List<TodoModel> getTodos(int page, int size, String sortBy, String sortOrder, String done, String text, String priority) {
         List<TodoModel> todos = todoRepository.getTodoList();
 
+        if (page < 0) {
+            System.out.println("Invalid page number. Use a number greater than or equal to 0.");
+            return null;
+        }
+
+        if (size < 0) {
+            System.out.println("Invalid size number. Use a number greater than or equal to 0.");
+            return null;
+        }
+
         if (sortBy != null && !sortFields.contains(sortBy)) {
             System.out.println("Invalid sortBy field. Use one of: " + sortFields);
+            return null;
+        }
+
+        if (sortOrder != null && !orderFields.contains(sortOrder)) {
+            System.out.println("Invalid sortOrder field. Use one of: " + orderFields);
+            return null;
+        }
+
+        if (done != null && !statuses.contains(done)) {
+            System.out.println("Invalid done field. Use one of: " + statuses);
+            return null;
+        }
+
+        if (text == null) {
+            System.out.println("Invalid text field. Use a valid string.");
+            return null;
+        }
+
+        if (priority != null && !priorities.contains(priority)) {
+            System.out.println("Invalid priority field. Use one of: " + priorities);
             return null;
         }
 
@@ -44,7 +75,7 @@ public class TodoService {
         }
 
         // Filter by name
-        if (text != null && !text.isEmpty()) {
+        if (!text.isEmpty()) {
             todos = todos.stream().filter(todo -> todo.getText().toLowerCase().contains(text.toLowerCase())).collect(Collectors.toList());
         }
 
@@ -137,13 +168,9 @@ public class TodoService {
 
         for (TodoModel todo : todos) {
             if (todo.isDone() && todo.getDoneDate() != null && !todo.getDoneDate().isEmpty()) {
-                System.out.println("Creation date: " + todo.getCreationDate());  // 2025-01-30T00:04:45.803Z for example
-                System.out.println("Done date: " + todo.getDoneDate());  // 2025-01-30T00:04:45.803Z for example
-
                 LocalDateTime creationDate = LocalDateTime.parse(todo.getCreationDate(), formatter);
                 LocalDateTime doneDate = LocalDateTime.parse(todo.getDoneDate(), formatter);
                 long duration = creationDate.until(doneDate, java.time.temporal.ChronoUnit.MINUTES);
-                System.out.println("Duration: " + duration + " minutes");
 
                 total += duration;
                 count++;
@@ -165,10 +192,5 @@ public class TodoService {
         avgTimeLow = countLow > 0 ? totalLow / countLow : 0;
         avgTimeMedium = countMedium > 0 ? totalMedium / countMedium : 0;
         avgTimeHigh = countHigh > 0 ? totalHigh / countHigh : 0;
-
-        System.out.println("Average time to finish all todos: " + avgTime);
-        System.out.println("Average time to finish low priority todos: " + avgTimeLow);
-        System.out.println("Average time to finish medium priority todos: " + avgTimeMedium);
-        System.out.println("Average time to finish high priority todos: " + avgTimeHigh);
     }
 }

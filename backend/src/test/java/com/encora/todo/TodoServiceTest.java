@@ -27,8 +27,50 @@ public class TodoServiceTest {
     }
 
     @Test
-    void testGetTodosWrongSortField() {
-        List<TodoModel> todos = todoService.getTodos(0, 10, wrongField, "", "", "text", "");
+    void testGetTodos() {
+        List<TodoModel> todos = todoService.getTodos(0, 10, "", "", "", "", "");
+        assert(todos != null);
+    }
+
+    @Test
+    void testGetTodosWrongPage() {
+        List<TodoModel> todos = todoService.getTodos(-1, 10, "", "", "", "", "");
+        assert(todos == null);
+    }
+
+    @Test
+    void testGetTodosWrongPageSize() {
+        List<TodoModel> todos = todoService.getTodos(0, -1, "", "", "", "", "");
+        assert(todos == null);
+    }
+
+    @Test
+    void testGetTodosWrongSortBy() {
+        List<TodoModel> todos = todoService.getTodos(0, 10, wrongField, "", "", "", "");
+        assert(todos == null);
+    }
+
+    @Test
+    void testGetTodosWrongSortOrder() {
+        List<TodoModel> todos = todoService.getTodos(0, 10, "", wrongField, "", "", "");
+        assert(todos == null);
+    }
+
+    @Test
+    void testGetTodosWrongDone() {
+        List<TodoModel> todos = todoService.getTodos(0, 10, "", "", wrongField, "", "");
+        assert(todos == null);
+    }
+
+    @Test
+    void testGetTodosWrongText() {
+        List<TodoModel> todos = todoService.getTodos(0, 10, "", "", "", null, "");
+        assert(todos == null);
+    }
+
+    @Test
+    void testGetTodosWrongPriority() {
+        List<TodoModel> todos = todoService.getTodos(0, 10, "", "", "", "", wrongField);
         assert(todos == null);
     }
 }
