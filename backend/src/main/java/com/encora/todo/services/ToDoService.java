@@ -29,6 +29,7 @@ public class TodoService {
     private final List<String> statuses = List.of("true", "false", "");
     private final List<String> sortFields = List.of("priority", "dueDate", "");
     private final List<String> orderFields = List.of("asc", "desc", "");
+    private final int maxTextLength = 120;
 
     private boolean validateID(Long id) {
         if (id == null || id < 0) {
@@ -45,6 +46,11 @@ public class TodoService {
 
         if (todo.getText() == null || todo.getText().isEmpty()) {
             System.out.println("Invalid text field. Use a valid string.");
+            return false;
+        }
+
+        if (todo.getText().length() > maxTextLength) {
+            System.out.println("Text field exceeds the maximum length of " + maxTextLength + " characters.");
             return false;
         }
 
