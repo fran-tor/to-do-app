@@ -1,7 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { it, expect, describe, vi, afterEach } from 'vitest'
 import '@testing-library/jest-dom/vitest';
-import { Todo } from '../../types';
 import NewTodoModal from '../../views/NewTodoModal';
 
 describe('NewTodoModal', () => {
