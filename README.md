@@ -32,7 +32,7 @@ cd to-do-app/backend/
 ./mvnw spring-boot:run
 ```
 
-4. Move to the frontend directory.
+4. Move to the frontend directory (Using a different terminal session).
 
 ```bash
 cd ../frontend
@@ -113,7 +113,7 @@ A “to do” should have the following properties:
 	- [ ] If “to do” is done, **this sh**ould clear the done date
 
 > [!IMPORTANT]  
-> The project does not have a PORT endpoint to set the tasks as done or undone, it uses the PUT endpoint for that porpuse instead.
+> The project does not have a POST endpoint to set the tasks as done or undone, it uses the PUT endpoint for that porpuse instead.
 
 ### Database
 
