@@ -32,6 +32,11 @@ public class TodoService {
     public List<TodoModel> getTodos(int page, int size, String sortBy, String sortOrder, String done, String text, String priority) {
         List<TodoModel> todos = todoRepository.getTodoList();
 
+        if (sortBy != null && !sortFields.contains(sortBy)) {
+            System.out.println("Invalid sortBy field. Use one of: " + sortFields);
+            return null;
+        }
+
         // Filter by done/undone
         if (done != null && !done.isEmpty() && statuses.contains(done)) {
             boolean isDone = Boolean.parseBoolean(done);
