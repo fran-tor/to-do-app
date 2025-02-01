@@ -38,7 +38,13 @@ cd to-do-app/backend/
 cd ../frontend
 ```
 
-5. Run the frontend
+5. Install the dependencies
+
+```bash
+npm install
+```
+
+6. Run the frontend
 
 ```bash
 npm run start
