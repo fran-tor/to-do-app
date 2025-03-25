@@ -5,6 +5,8 @@ import { ActionType } from '../../constants';
 import '@testing-library/jest-dom/vitest';
 
 describe('BaseModal', () => {
+  
+
   it('should render nothing when isOpen is false', () => {
     render(<BaseModal isOpen={false} handleClose={() => { }} onTodoActionDone={() => { }} actionType={ActionType.CREATE} />);
     expect(document.body.textContent).toBe('');

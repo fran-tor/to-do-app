@@ -46,13 +46,8 @@ const TodosTable: React.FC<Props> = ({ todosList, onTodosListChange, onTodoEdit 
     }
   }
 
-  const handleOnPriorityClick = () => { 
-    setTodosFilterAttributes(prev => ({ ...prev, sortBy: 'priority', sortOrder: sortOrder === 'asc' ? 'desc' : 'asc' }));
-    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-  }
-
-  const handleOnDueDateClick = () => {
-    setTodosFilterAttributes(prev => ({ ...prev, sortBy: 'dueDate', sortOrder: sortOrder === 'asc' ? 'desc' : 'asc' }));
+  const handleSortBy = (sortBy: string) => () => { 
+    setTodosFilterAttributes(prev => ({ ...prev, sortBy, sortOrder: sortOrder === 'asc' ? 'desc' : 'asc' }));
     setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
   }
 
@@ -68,13 +63,13 @@ const TodosTable: React.FC<Props> = ({ todosList, onTodosListChange, onTodoEdit 
           </TableCell>
           <TableCell>Name</TableCell>
           <TableCell
-            onClick={() => handleOnPriorityClick()}
+            onClick={handleSortBy('priority')}
             style={{ cursor: 'pointer' }}
           >
             {priorityText}
           </TableCell>
           <TableCell
-            onClick={() => handleOnDueDateClick()}
+            onClick={handleSortBy('dueDate')}
             style={{ cursor: 'pointer' }}
           >
             {dueDateText}
