@@ -1,77 +1,94 @@
 import Metrics from './Metrics';
 import TodosFilter from './TodosFilter';
 import TodosTable from './TodosTable';
-import {
-  Box,
-  Button,
-} from '@mui/material';
-import { useCallback, useEffect, useState } from 'react';
+import { Box, Button } from '@mui/material';
 import NewTodoModal from './NewTodoModal';
-import { todos } from '../api/todos';
-import { Todo, TodosMetrics } from '../types';
+import { Todo } from '../types';
 import EditTodoModal from './EditTodoModal';
 import { useTodosFilter } from '../context/TodosFilterContext';
 import TodosPagination from './Pagination';
+import { useTodoState } from '../hooks/useTodoState';
+import { useModalState } from '../hooks/useModalState';
 
+/**
+ * TodoApp is the main component for the Todo application.
+ * It leverages custom hooks for API calls, state management, and modal handling.
+ */
 const TodoApp = () => {
-  const [todoToEdit, setTodoToEdit] = useState<Todo | undefined>(undefined);
-  const [todosList, setTodosList] = useState<Todo[]>([]);
-  const [serverError, setServerError] = useState<string | null>(null);
-  const [isNewTodoModalOpen, setIsNewTodoModalOpen] = useState(false);
-  const [isEditTodoModalOpen, setIsEditTodoModalOpen] = useState(false);
+  // Get filter attributes from context
   const { todosFilterAttributes } = useTodosFilter();
-  const [metrics, setMetrics] = useState<TodosMetrics>({ pages: 0, avgTime: 0, avgTimeLow: 0, avgTimeMedium: 0, avgTimeHigh: 0 });
 
-  const fetchTodos = useCallback(async () => {
-    await todos.getAll(todosFilterAttributes)
-      .then((data) => {
-        setTodosList(data.todos);
-        setMetrics(data.metrics);
-      })
-      .catch(() => setServerError('Error fetching data'));
-  }, [setMetrics, todosFilterAttributes]);
+  // Use custom hooks to manage todos, API calls and modals
+  const {
+    todosList,
+    metrics,
+    todoToEdit,
+    setTodoToEdit,
+    refreshTodos,
+    error
+  } = useTodoState(todosFilterAttributes);
 
-  useEffect(() => {
-    fetchTodos();
-  }, [todosFilterAttributes, fetchTodos]);
+  const {
+    isNewTodoModalOpen,
+    isEditTodoModalOpen,
+    openNewTodoModal,
+    closeNewTodoModal,
+    openEditTodoModal,
+    closeEditTodoModal
+  } = useModalState();
 
-  const handleNewTodoModalOpen = () => {
-    setIsNewTodoModalOpen(true);
-  };
-
-  const handleNewTodoModalClose = async () => {
-    setIsNewTodoModalOpen(false);
-    setServerError(null);
-  };
-
+  /**
+   * Handler for opening edit todo modal
+   */
   const handleEditTodoModalOpen = (todo: Todo) => {
-    setIsEditTodoModalOpen(true);
     setTodoToEdit(todo);
-  }
+    openEditTodoModal();
+  };
 
-  const handleEditTodoModalClose = () => {
-    setIsEditTodoModalOpen(false);
-  }
-
+  /**
+   * Handler for when todos list needs to be refreshed
+   */
   const handleTodosListChange = async () => {
-    await fetchTodos();
-  }
+    await refreshTodos();
+  };
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
       <TodosFilter />
-      <Button variant="contained" onClick={handleNewTodoModalOpen} style={{ maxWidth: '150px' }} sx={{ textTransform: 'capitalize' }}>
+      <Button
+        variant="contained"
+        onClick={openNewTodoModal}
+        style={{ maxWidth: '150px' }}
+        sx={{ textTransform: 'capitalize' }}
+      >
         + New To Do
       </Button>
-      {serverError ? (
-        <Box sx={{ color: 'red' }}>{serverError}</Box>
+
+      {error ? (
+        <Box sx={{ color: 'red' }}>{error}</Box>
       ) : (
-        <TodosTable todosList={todosList} onTodosListChange={handleTodosListChange} onTodoEdit={handleEditTodoModalOpen} />
+        <TodosTable
+          todosList={todosList}
+          onTodosListChange={handleTodosListChange}
+          onTodoEdit={handleEditTodoModalOpen}
+        />
       )}
+
       <TodosPagination pages={metrics.pages} />
       <Metrics metrics={metrics} />
-      <NewTodoModal isOpen={isNewTodoModalOpen} handleClose={handleNewTodoModalClose} onTodoAdded={handleTodosListChange} />
-      <EditTodoModal isOpen={isEditTodoModalOpen} handleClose={handleEditTodoModalClose} onTodoEdited={handleTodosListChange} todo={todoToEdit} />
+
+      <NewTodoModal
+        isOpen={isNewTodoModalOpen}
+        handleClose={closeNewTodoModal}
+        onTodoAdded={handleTodosListChange}
+      />
+
+      <EditTodoModal
+        isOpen={isEditTodoModalOpen}
+        handleClose={closeEditTodoModal}
+        onTodoEdited={handleTodosListChange}
+        todo={todoToEdit}
+      />
     </Box>
   );
 };
