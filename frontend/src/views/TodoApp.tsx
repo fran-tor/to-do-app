@@ -5,7 +5,7 @@ import { Box, Button } from '@mui/material';
 import NewTodoModal from './NewTodoModal';
 import { Todo } from '../types';
 import EditTodoModal from './EditTodoModal';
-import { useTodosFilter } from '../context/TodosFilterContext';
+import { useTodosFilter } from "../hooks/useTodosFilter";
 import TodosPagination from './Pagination';
 import { useTodoState } from '../hooks/useTodoState';
 import { useModalState } from '../hooks/useModalState';

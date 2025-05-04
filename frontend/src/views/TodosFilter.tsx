@@ -1,6 +1,6 @@
 import { Box, FormControl, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material';
 import * as React from 'react';
-import { useTodosFilter } from '../context/TodosFilterContext';
+import { useTodosFilter } from "../hooks/useTodosFilter";
 
 const TodosFilter: React.FC = () => {
   const [newTodoText, setNewTodoText] = React.useState('');

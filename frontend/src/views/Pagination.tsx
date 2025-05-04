@@ -1,6 +1,6 @@
 import { Box, Pagination, Stack } from "@mui/material";
 import React from "react";
-import { useTodosFilter } from "../context/TodosFilterContext";
+import { useTodosFilter } from "../hooks/useTodosFilter";
 
 interface Props {
   pages: number;

@@ -33,6 +33,7 @@ export const useTodoState = (filterAttributes: TodosFilterAttributes) => {
       setTodosList(data.todos);
       setMetrics(data.metrics);
     } catch (error) {
+      console.error('Error fetching todos:', error);
       // Error is handled in the useTodosApi hook
       setTodosList([]);
     }

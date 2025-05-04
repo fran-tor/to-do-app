@@ -2,7 +2,7 @@ import React from "react";
 import { Todo } from "../types";
 import { Button, Checkbox, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import { todos } from "../api/todos";
-import { useTodosFilter } from "../context/TodosFilterContext";
+import { useTodosFilter } from "../hooks/useTodosFilter";
 
 interface Props {
   todosList: Todo[];

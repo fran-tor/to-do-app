@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { todos } from '../api/todos';
-import { Todo, TodosFilterAttributes, TodosMetrics } from '../types';
+import { Todo, TodosFilterAttributes } from '../types';
 
 /**
  * Custom hook that encapsulates API interactions for todos

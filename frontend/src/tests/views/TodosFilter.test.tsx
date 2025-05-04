@@ -2,7 +2,7 @@
 import { render } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import TodosFilter from '../../views/TodosFilter';
-import { TodoListContextProvider } from '../../context/TodosFilterContext';
+import { TodoListContextProvider } from '../../context/TodosFilterContextProvider';
 
 describe('TodosFilter', () => {
   it('renders the filter form', () => {
