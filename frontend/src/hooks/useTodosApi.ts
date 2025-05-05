@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { todos } from '../api/todos';
 import { Todo, TodosFilterAttributes } from '../types';
+import { createApiRequest } from '../api/utils';
 
 /**
  * Custom hook that encapsulates API interactions for todos
@@ -13,72 +14,48 @@ export const useTodosApi = () => {
    * Fetches todos based on filter attributes
    */
   const fetchTodos = useCallback(async (filterAttributes: TodosFilterAttributes) => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      const response = await todos.getAll(filterAttributes);
-      setIsLoading(false);
-      return response;
-    } catch (err) {
-      setError('Error fetching data');
-      setIsLoading(false);
-      throw err;
-    }
+    return createApiRequest(
+      () => todos.getAll(filterAttributes),
+      setIsLoading,
+      setError,
+      'Error fetching data'
+    )();
   }, []);
 
   /**
    * Creates a new todo
    */
   const createTodo = useCallback(async (todo: Todo) => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      const response = await todos.create(todo);
-      setIsLoading(false);
-      return response;
-    } catch (err) {
-      setError('Error creating todo');
-      setIsLoading(false);
-      throw err;
-    }
+    return createApiRequest(
+      () => todos.create(todo),
+      setIsLoading,
+      setError,
+      'Error creating todo'
+    )();
   }, []);
 
   /**
    * Updates an existing todo
    */
   const updateTodo = useCallback(async (todo: Todo) => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      const response = await todos.update(todo);
-      setIsLoading(false);
-      return response;
-    } catch (err) {
-      setError('Error updating todo');
-      setIsLoading(false);
-      throw err;
-    }
+    return createApiRequest(
+      () => todos.update(todo),
+      setIsLoading,
+      setError,
+      'Error updating todo'
+    )();
   }, []);
 
   /**
    * Deletes a todo by ID
    */
   const deleteTodo = useCallback(async (id: number) => {
-    setIsLoading(true);
-    setError(null);
-    
-    try {
-      const response = await todos.delete(id);
-      setIsLoading(false);
-      return response;
-    } catch (err) {
-      setError('Error deleting todo');
-      setIsLoading(false);
-      throw err;
-    }
+    return createApiRequest(
+      () => todos.delete(id),
+      setIsLoading,
+      setError,
+      'Error deleting todo'
+    )();
   }, []);
 
   return {
@@ -87,7 +64,6 @@ export const useTodosApi = () => {
     fetchTodos,
     createTodo,
     updateTodo,
-    deleteTodo,
-    clearError: () => setError(null)
+    deleteTodo
   };
 };

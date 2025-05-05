@@ -20,8 +20,7 @@ export const useTodoState = (filterAttributes: TodosFilterAttributes) => {
   const { 
     fetchTodos, 
     error,
-    isLoading,
-    clearError
+    isLoading
   } = useTodosApi();
 
   /**
@@ -52,6 +51,5 @@ export const useTodoState = (filterAttributes: TodosFilterAttributes) => {
     refreshTodos: loadTodos,
     error,
     isLoading,
-    clearError
   };
 };
