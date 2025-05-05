@@ -1,37 +1,49 @@
 package com.encora.todo.repositories;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.encora.todo.models.TodoModel;
 import org.springframework.stereotype.Repository;
 
-import com.encora.todo.models.TodoModel;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
-public class TodoRepository {
+public class TodoRepository implements ITodoRepository {
     private final List<TodoModel> todoList = new ArrayList<>();
 
+    @Override
     public List<TodoModel> getTodoList() {
-        return todoList;
+        return new ArrayList<>(todoList); // Return a defensive copy
     }
 
-    public void setToDo(TodoModel toDo) {
-        todoList.add(toDo);
+    @Override
+    public void setToDo(TodoModel todo) {
+        todoList.add(todo);
     }
 
-    public void deleteToDoById(Long id) {
-        todoList.removeIf(toDo -> toDo.getId().equals(id));
+    @Override
+    public boolean deleteToDoById(Long id) {
+        int initialSize = todoList.size();
+        todoList.removeIf(todo -> todo.getId().equals(id));
+        return todoList.size() < initialSize;
     }
 
-    public void updateToDoById(Long id, TodoModel toDo) {
-        todoList.stream()
+    @Override
+    public TodoModel updateToDoById(Long id, TodoModel updatedTodo) {
+        Optional<TodoModel> existingTodo = todoList.stream()
                 .filter(todo -> todo.getId().equals(id))
-                .forEach(todo -> {
-                    todo.setText(toDo.getText());
-                    todo.setDueDate(toDo.getDueDate());
-                    todo.setDone(toDo.isDone());
-                    todo.setDoneDate(toDo.getDoneDate());
-                    todo.setPriority(toDo.getPriority());
-                });
+                .findFirst();
+        
+        if (existingTodo.isPresent()) {
+            TodoModel todo = existingTodo.get();
+            todo.setText(updatedTodo.getText());
+            todo.setDueDate(updatedTodo.getDueDate());
+            todo.setDone(updatedTodo.isDone());
+            todo.setDoneDate(updatedTodo.getDoneDate());
+            todo.setPriority(updatedTodo.getPriority());
+            return todo;
+        }
+        
+        return null;
     }
 }

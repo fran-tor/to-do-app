@@ -11,12 +11,13 @@ import org.springframework.stereotype.Service;
 
 import com.encora.todo.models.MetricsModel;
 import com.encora.todo.models.TodoModel;
+import com.encora.todo.models.TodoResponse;
 import com.encora.todo.repositories.TodoRepository;
 
 @Service
 public class TodoService {
     @Autowired
-    TodoRepository todoRepository;
+    private TodoRepository todoRepository;
 
     private final AtomicLong counter = new AtomicLong();
     private int pages = 0;
@@ -29,112 +30,46 @@ public class TodoService {
     private final List<String> statuses = List.of("true", "false", "");
     private final List<String> sortFields = List.of("priority", "dueDate", "");
     private final List<String> orderFields = List.of("asc", "desc", "");
-    private final int maxTextLength = 120;
 
-    private boolean validateID(Long id) {
-        if (id == null || id < 0) {
-            System.out.println("Invalid ID " + id + ". Use a number greater than or equal to 0.");
-            return false;
-        }
-        return true;
-    }
-
-    private boolean validateTodoFields(TodoModel todo) {
-        if (!validateID(todo.getId())) {
-            return false;
+    public TodoResponse getTodos(int page, int size, String sortBy, String sortOrder, String done, String text,
+            String priority) {
+        // Validate parameters - this could be moved to a validator class
+        if (page < 0 || size < 0 ||
+                (sortBy != null && !sortFields.contains(sortBy)) ||
+                (sortOrder != null && !orderFields.contains(sortOrder)) ||
+                (done != null && !statuses.contains(done)) ||
+                text == null ||
+                (priority != null && !priorities.contains(priority))) {
+            return null;
         }
 
-        if (todo.getText() == null || todo.getText().isEmpty()) {
-            System.out.println("Invalid text field. Use a valid string.");
-            return false;
-        }
-
-        if (todo.getText().length() > maxTextLength) {
-            System.out.println("Text field exceeds the maximum length of " + maxTextLength + " characters.");
-            return false;
-        }
-
-        // Verify if dates are in the correct format (ISO-8601)
-        if (todo.getDueDate() != null && !todo.getDueDate().isEmpty() && !todo.getDueDate().matches("^\\d{4}-\\d{2}-\\d{2}$")) {
-            System.out.println("Received invalid date format " + todo.getDueDate() + ". Please use the ISO-8601 format (YYYY-MM-DD).");
-            return false;
-        }
-
-        if (todo.getDoneDate() != null && !todo.getDoneDate().isEmpty() && !todo.getDoneDate().matches("^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$")) {
-            System.out.println("Received invalid date format " + todo.getDoneDate() + ". Please use the ISO-8601 format (YYYY-MM-DDTHH:MM:SS.SSSZ).");
-            return false;
-        }
-
-        if (todo.getPriority() == null || !priorities.contains(todo.getPriority())) {
-            System.out.println("Invalid priority field. Use one of: " + priorities);
-            return false;
-        }
-
-        return true;
-    }
-
-    public List<TodoModel> getTodos(int page, int size, String sortBy, String sortOrder, String done, String text, String priority) {
         List<TodoModel> todos = todoRepository.getTodoList();
 
-        if (page < 0) {
-            System.out.println("Invalid page number. Use a number greater than or equal to 0.");
-            return null;
-        }
-
-        if (size < 0) {
-            System.out.println("Invalid size number. Use a number greater than or equal to 0.");
-            return null;
-        }
-
-        if (sortBy != null && !sortFields.contains(sortBy)) {
-            System.out.println("Invalid sortBy field. Use one of: " + sortFields);
-            return null;
-        }
-
-        if (sortOrder != null && !orderFields.contains(sortOrder)) {
-            System.out.println("Invalid sortOrder field. Use one of: " + orderFields);
-            return null;
-        }
-
-        if (done != null && !statuses.contains(done)) {
-            System.out.println("Invalid done field. Use one of: " + statuses);
-            return null;
-        }
-
-        if (text == null) {
-            System.out.println("Invalid text field. Use a valid string.");
-            return null;
-        }
-
-        if (priority != null && !priorities.contains(priority)) {
-            System.out.println("Invalid priority field. Use one of: " + priorities);
-            return null;
-        }
-
-        // Filter by done/undone
-        if (done != null && !done.isEmpty() && statuses.contains(done)) {
+        // Apply filters
+        if (done != null && !done.isEmpty()) {
             boolean isDone = Boolean.parseBoolean(done);
             todos = todos.stream().filter(todo -> todo.isDone() == isDone).collect(Collectors.toList());
         }
 
-        // Filter by name
         if (!text.isEmpty()) {
-            todos = todos.stream().filter(todo -> todo.getText().toLowerCase().contains(text.toLowerCase())).collect(Collectors.toList());
+            todos = todos.stream().filter(todo -> todo.getText().toLowerCase().contains(text.toLowerCase()))
+                    .collect(Collectors.toList());
         }
 
-        // Filter by priority
-        if (priority != null && !priority.isEmpty() && priorities.contains(priority)) {
-            todos = todos.stream().filter(todo -> todo.getPriority().equalsIgnoreCase(priority)).collect(Collectors.toList());
+        if (priority != null && !priority.isEmpty()) {
+            todos = todos.stream().filter(todo -> todo.getPriority().equalsIgnoreCase(priority))
+                    .collect(Collectors.toList());
         }
 
-        // Sort by priority or due date
+        // Apply sorting
         if (sortBy != null && !sortBy.isEmpty()) {
-            if (sortBy.equalsIgnoreCase(sortFields.get(0))) {
+            if (sortBy.equalsIgnoreCase("priority")) {
                 todos = todos.stream().sorted((a, b) -> {
-                    int comparison = Integer.compare(priorities.indexOf(a.getPriority()), priorities.indexOf(b.getPriority()));
+                    int comparison = Integer.compare(priorities.indexOf(a.getPriority()),
+                            priorities.indexOf(b.getPriority()));
                     return sortOrder != null && sortOrder.equalsIgnoreCase("desc") ? -comparison : comparison;
                 }).collect(Collectors.toList());
-            } else if (sortBy.equalsIgnoreCase(sortFields.get(1))) {
+            } else if (sortBy.equalsIgnoreCase("dueDate")) {
                 todos = todos.stream().sorted((a, b) -> {
                     String dueDateA = a.getDueDate() != null ? a.getDueDate() : "";
                     String dueDateB = b.getDueDate() != null ? b.getDueDate() : "";
@@ -144,38 +79,56 @@ public class TodoService {
             }
         }
 
-        // Pagination
+        // Apply pagination
+        int totalItems = todos.size();
+        int totalPages = size > 0 ? (int) Math.ceil((double) totalItems / size) : 0;
+        this.pages = totalPages;
+
         int start = page * size;
-        int end = Math.min(start + size, todos.size());
-        setPages((int) Math.ceil((double) todos.size() / size));
-        return todos.subList(start, end);
+        int end = Math.min(start + size, totalItems);
+
+        List<TodoModel> paginatedTodos = start < totalItems ? todos.subList(start, end) : List.of();
+
+        // Create response with metrics
+        TodoResponse response = new TodoResponse();
+        MetricsModel metrics = getMetrics();
+        response.setMetrics(metrics);
+        response.setTodos(paginatedTodos);
+
+        return response;
     }
 
-    public boolean addTodo(TodoModel todo) {
-        if (!validateTodoFields(todo)) {
-            return false;
-        }
+    public TodoModel addTodo(TodoModel todo) {
+        // Fields are now validated with @Valid annotations
         todo.setId(counter.incrementAndGet());
+
+        if (todo.getCreationDate() == null) {
+            todo.setCreationDate(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+        }
+
         todoRepository.setToDo(todo);
-        return true;
+        return todo;
     }
 
-    public void deleteTodoById(Long id) {
-        todoRepository.deleteToDoById(id);
+    public boolean deleteTodoById(Long id) {
+        return todoRepository.deleteToDoById(id);
     }
 
-    public void updateTodoById(Long id, TodoModel todo) {
-        todoRepository.updateToDoById(id, todo);
+    public TodoModel updateTodoById(Long id, TodoModel todo) {
+        // Fields are now validated with @Valid annotations
+        return todoRepository.updateToDoById(id, todo);
     }
 
     public MetricsModel getMetrics() {
-        MetricsModel metrics = new MetricsModel();
         calculateAvgTimeToFinishTodos();
-        metrics.setPages(getPages());
+
+        MetricsModel metrics = new MetricsModel();
+        metrics.setPages(this.pages);
         metrics.setAvgTime(avgTime);
         metrics.setAvgTimeLow(avgTimeLow);
         metrics.setAvgTimeMedium(avgTimeMedium);
         metrics.setAvgTimeHigh(avgTimeHigh);
+
         return metrics;
     }
 
