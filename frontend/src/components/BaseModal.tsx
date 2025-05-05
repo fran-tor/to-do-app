@@ -62,63 +62,61 @@ const BaseModal: React.FC<Props> = ({ isOpen, handleClose, onTodoActionDone, act
     return true;
   }
 
-  const handleCreate = () => {
-    if (todoText.trim() !== '') {
-      if (!verifyDueDateState()) {
-        return;
-      }
-      const newTodo: Todo = {
-        id: 0,
-        text: todoText,
-        dueDate: isDueDateEnabled ? todoDueDate : undefined,
-        done: false,
-        doneDate: undefined,
-        priority: todoPriority,
-        creationDate: new Date().toISOString(),
-      };
-
-      todos.create(newTodo)
-        .then(onTodoActionDone)
-        .catch((error) => {
-          console.error('Failed to create todo with error:', error);
-        })
-        .finally(() => {
-          // Resets values and closes modal after the request is done
-          settodoText('');
-          setTodoPriority('Low');
-          setTodoDueDate('');
-          handleCloseModal();
-          // onTodoActionDone();
-        });
-    } else {
+  const validateForm = () => {
+    if (todoText.trim() === '') {
       alert('Task name cannot be empty');
+      return false;
     }
-  }
+    return verifyDueDateState();
+  };
+
+  const resetForm = () => {
+    settodoText('');
+    setTodoPriority('Low');
+    setTodoDueDate('');
+    handleCloseModal();
+  };
+
+  const handleCreate = () => {
+    if (!validateForm()) return;
+
+    const newTodo: Todo = {
+      id: 0,
+      text: todoText,
+      dueDate: isDueDateEnabled ? todoDueDate : undefined,
+      done: false,
+      doneDate: undefined,
+      priority: todoPriority,
+      creationDate: new Date().toISOString(),
+    };
+
+    todos.create(newTodo)
+      .then(onTodoActionDone)
+      .catch((error) => {
+        console.error('Failed to create todo with error:', error);
+      })
+      .finally(resetForm);
+  };
 
   const handleEdit = () => {
-    if (todoText.trim() !== '') {
-      if (!verifyDueDateState()) {
-        return;
-      }
-      const editedTodo: Todo = {
-        ...todo,
-        id: todo?.id ?? 0,
-        text: todoText,
-        dueDate: isDueDateEnabled ? todoDueDate : undefined,
-        priority: todoPriority,
-        creationDate: todo?.creationDate ?? new Date().toISOString(),
-      };
-      todos.update(editedTodo).finally(() => {
-        // Resets values and closes modal after the request is done
-        settodoText('');
-        setTodoPriority('Low');
-        setTodoDueDate('');
-        handleCloseModal();
-        onTodoActionDone();
-      });
-    } else {
-      alert('Task name cannot be empty');
-    }
+    if (!validateForm()) return;
+
+    const editedTodo: Todo = {
+      ...todo,
+      id: todo?.id ?? 0,
+      text: todoText,
+      dueDate: isDueDateEnabled ? todoDueDate : undefined,
+      priority: todoPriority,
+      creationDate: todo?.creationDate ?? new Date().toISOString(),
+    };
+    todos.update(editedTodo).finally(() => {
+      // Resets values and closes modal after the request is done
+      settodoText('');
+      setTodoPriority('Low');
+      setTodoDueDate('');
+      handleCloseModal();
+      onTodoActionDone();
+    });
   }
 
   const handleAction = () => {
