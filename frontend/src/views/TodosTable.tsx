@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Todo } from "../types";
 import { Button, Checkbox, Table, TableBody, TableCell, TableHead, TableRow } from "@mui/material";
 import { todos } from "../api/todos";
@@ -16,6 +16,10 @@ const TodosTable: React.FC<Props> = ({ todosList, onTodosListChange, onTodoEdit 
   const [allTodosSelected, setAllTodosSelected] = React.useState(false);
   const { setTodosFilterAttributes } = useTodosFilter();
   const [sortOrder, setSortOrder] = React.useState('asc');
+
+  useEffect(() => {
+    console.log('TodosList', todosList);
+  }, [todosList]);
 
   const handleTodoDelete = async (todoId: number) => {
     await todos.delete(todoId).finally(async () => {

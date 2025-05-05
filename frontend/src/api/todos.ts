@@ -14,11 +14,22 @@ export const todos = {
         params.append(key, value.toString());
       }
     }
-
+  
     console.log('params', params.toString());
     const response = await fetch(`${BASE_URL}${todosEndpoint}?${params.toString()}`);
-    const data = await response.json();
-    return data;
+    const responseData = await response.json();
+    
+    // The API returns { data: { metrics, todos } }
+    console.log('Complete response:', responseData);
+    
+    // Extract the actual data from the API response
+    const data = responseData.data || responseData;
+    
+    // Return in the format expected by useTodoState
+    return {
+      todos: data.todos || [],
+      metrics: data.metrics
+    };
   },
   async create(todo: Todo) {
     const response = await fetch(`${BASE_URL}${todosEndpoint}`, {

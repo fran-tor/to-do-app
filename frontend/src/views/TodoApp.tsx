@@ -1,7 +1,7 @@
 import Metrics from './Metrics';
 import TodosFilter from './TodosFilter';
 import TodosTable from './TodosTable';
-import { Box, Button } from '@mui/material';
+import { Box, Button, CircularProgress } from '@mui/material';
 import NewTodoModal from './NewTodoModal';
 import { Todo } from '../types';
 import EditTodoModal from './EditTodoModal';
@@ -25,7 +25,8 @@ const TodoApp = () => {
     todoToEdit,
     setTodoToEdit,
     refreshTodos,
-    error
+    error,
+    isLoading = false // Add default value
   } = useTodoState(todosFilterAttributes);
 
   const {
@@ -64,18 +65,27 @@ const TodoApp = () => {
         + New To Do
       </Button>
 
-      {error ? (
+      {isLoading ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+          <CircularProgress />
+        </Box>
+      ) : error ? (
         <Box sx={{ color: 'red' }}>{error}</Box>
       ) : (
         <TodosTable
-          todosList={todosList}
+          todosList={todosList || []} // Provide default empty array
           onTodosListChange={handleTodosListChange}
           onTodoEdit={handleEditTodoModalOpen}
         />
       )}
 
-      <TodosPagination pages={metrics.pages} />
-      <Metrics metrics={metrics} />
+      {/* Only render pagination when metrics exist and has pages */}
+      {metrics && typeof metrics.pages !== 'undefined' && (
+        <TodosPagination pages={metrics.pages} />
+      )}
+      
+      {/* Only render metrics component when metrics exist */}
+      {metrics && <Metrics metrics={metrics} />}
 
       <NewTodoModal
         isOpen={isNewTodoModalOpen}
