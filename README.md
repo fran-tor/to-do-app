@@ -112,14 +112,6 @@ A “to do” should have the following properties:
 	- [x] Validations included.
 - [x] **A PUT endpoint (/**todos/{id}) to update the “to do” name, due date and/or priority 
 	- [ ] Valid**ations include**d.
-- [ ] A POST endpoint (/todos/{id}/done) to **mark “to do” as** done.
-	- [ ] This should update the “done date” property.
-	- [ ] If “**to do” i**s already done nothing should happen (no error retur**ned)** 
-- [ ] **A** PUT endpoint (/todos/{id}/undone) to mark “to do” as **undone If “to d**o” is already undone nothing should happen.
-	- [ ] If “to do” is done, **this sh**ould clear the done date
-
-> [!IMPORTANT]  
-> The project does not have a POST endpoint to set the tasks as done or undone, it uses the PUT endpoint for that porpuse instead.
 
 ### Database
 
